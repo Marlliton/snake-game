@@ -1,0 +1,37 @@
+{
+  "name": "@appointmently/core",
+  "version": "1.0.0",
+  "description": "",
+  "typings": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./dist"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "rm -rf ./dist && pnpm exec tsc -b tsconfig.build.json",
+    "dev": "pnpm exec tsc -b tsconfig.build.json --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest run --coverage",
+    "test:cov:watch": "vitest --coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@appointmently/eslint-config": "workspace:*",
+    "@faker-js/faker": "^8.3.1",
+    "@types/node": "^20.10.5",
+    "@vitest/coverage-v8": "^1.1.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3",
+    "vite-tsconfig-paths": "^4.2.2",
+    "vitest": "^1.1.0"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.10"
+  }
+}

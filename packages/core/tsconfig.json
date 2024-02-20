@@ -1,0 +1,12 @@
+{
+  "extends": "@repo/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "forceConsistentCasingInFileNames": true,
+    "rootDir": ".",
+    "paths": {
+      "@/*": ["./src/*", "./test/*"],
+    }
+  },
+  "include": ["src", "test"],
+}
