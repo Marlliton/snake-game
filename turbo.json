@@ -11,6 +11,7 @@
     },
     "test": {},
     "test:cov": {},
+    "test:watch": {},
     "dev": {
       "cache": false,
       "persistent": true

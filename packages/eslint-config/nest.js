@@ -30,13 +30,20 @@ module.exports = {
     {
       files: ["*.js?(x)", "*.ts?(x)"],
       rules: {
-        indent: 'off',
+        indent: "off",
         "linebreak-style": ["error", "unix"],
         semi: ["error", "always"],
         "object-curly-spacing": ["error", "always"],
-        "no-unused-vars": "warn",
         "@typescript-eslint/no-explicit-any": "warn",
-        "@typescript-eslint/no-unused-vars": "warn", 
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+          "error", // or "warn"
+          {
+            argsIgnorePattern: "^_",
+            varsIgnorePattern: "^_",
+            caughtErrorsIgnorePattern: "^_",
+          },
+        ],
         "no-useless-constructor": "off",
         "no-use-before-define": "off",
         "import/no-duplicates": "off",
@@ -44,7 +51,7 @@ module.exports = {
           "error",
           {
             printWidth: 100,
-            singleQuote: false
+            singleQuote: false,
           },
         ],
         "import-helpers/order-imports": [
