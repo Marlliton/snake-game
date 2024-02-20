@@ -13,8 +13,8 @@
     "test:e2e": "turbo test:e2e"
   },
   "devDependencies": {
-    "@appointmently/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@snake/eslint-config": "workspace:*",
+    "@snake/typescript-config": "workspace:*",
     "prettier": "^3.1.0",
     "turbo": "latest"
   },

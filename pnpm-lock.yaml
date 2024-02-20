@@ -8,10 +8,10 @@ importers:
 
   .:
     devDependencies:
-      '@appointmently/eslint-config':
+      '@snake/eslint-config':
         specifier: workspace:*
         version: link:packages/eslint-config
-      '@repo/typescript-config':
+      '@snake/typescript-config':
         specifier: workspace:*
         version: link:packages/typescript-config
       prettier:
@@ -23,12 +23,6 @@ importers:
 
   apps/backend:
     dependencies:
-      '@appointmently/core':
-        specifier: workspace:*
-        version: link:../../packages/core
-      '@appointmently/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
       '@nestjs/common':
         specifier: ^10.0.0
         version: 10.3.3(reflect-metadata@0.1.14)(rxjs@7.8.1)
@@ -38,6 +32,12 @@ importers:
       '@nestjs/platform-express':
         specifier: ^10.0.0
         version: 10.3.3(@nestjs/common@10.3.3)(@nestjs/core@10.3.3)
+      '@snake/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@snake/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.14
@@ -117,10 +117,10 @@ importers:
 
   apps/web:
     dependencies:
-      '@appointmently/eslint-config':
+      '@snake/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@appointmently/ui':
+      '@snake/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       next:
@@ -136,7 +136,7 @@ importers:
       '@next/eslint-plugin-next':
         specifier: ^14.0.2
         version: 14.1.0
-      '@repo/typescript-config':
+      '@snake/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/eslint':
@@ -164,12 +164,12 @@ importers:
         specifier: ^1.11.10
         version: 1.11.10
     devDependencies:
-      '@appointmently/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
       '@faker-js/faker':
         specifier: ^8.3.1
         version: 8.4.1
+      '@snake/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
       '@types/node':
         specifier: ^20.10.5
         version: 20.11.19
@@ -241,10 +241,10 @@ importers:
 
   packages/ui:
     devDependencies:
-      '@appointmently/eslint-config':
+      '@snake/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@repo/typescript-config':
+      '@snake/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       '@turbo/gen':

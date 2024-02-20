@@ -1,5 +1,5 @@
 {
-  "name": "@appointmently/eslint-config",
+  "name": "@snake/eslint-config",
   "version": "0.0.0",
   "private": true,
   "files": [
