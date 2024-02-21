@@ -1,7 +1,7 @@
 import { Optional } from "@/types/Optional";
 
-import { Entity } from "../entities/entity";
-import { UniqueEntityId } from "../entities/unique-entity-id";
+import { Entity } from "../../../../common/entities/entity";
+import { UniqueEntityId } from "../../../../common/entities/unique-entity-id";
 
 interface FruitProps {
   fruitY: number;

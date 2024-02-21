@@ -1,16 +1,14 @@
 import { Entity } from "@/common/entities/entity";
 import { UniqueEntityId } from "@/common/entities/unique-entity-id";
-import { Fruit } from "@/common/value-objects/Fruit";
-import { Player } from "@/common/value-objects/Player";
+import { Screen } from "@/common/value-objects/Screen";
 
-type ScreenProperties = {
-  width: number;
-  height: number;
-};
+import { Fruit } from "../fruit";
+import { Player } from "../player";
+
 export interface GameProps {
   players: Record<string, Player>;
   fruits: Record<string, Fruit>;
-  screen: ScreenProperties;
+  screen: Screen;
 }
 
 export class Game extends Entity<Game, GameProps> {
@@ -18,7 +16,7 @@ export class Game extends Entity<Game, GameProps> {
     return this.props.players;
   }
 
-  get screen(): ScreenProperties {
+  get screen(): Screen {
     return this.props.screen;
   }
 
@@ -45,9 +43,13 @@ export class Game extends Entity<Game, GameProps> {
   }
 
   movePlayer(player: Player): Game {
-    const correctMovement = this.checkAndForceCorrectMovement(player);
+    const { x, y } = this.screen.checkAndForceCorrectMovement({
+      x: player.playerX,
+      y: player.playerY,
+    });
+
     return this.clone({
-      players: { ...this.players, [player.id.value]: correctMovement },
+      players: { ...this.players, [player.id.value]: player.clone({ playerX: x, playerY: y }) },
     });
   }
 
@@ -57,31 +59,5 @@ export class Game extends Entity<Game, GameProps> {
     });
 
     return game;
-  }
-
-  private checkAndForceCorrectMovement(player: Player): Player {
-    const { height, width } = this.screen;
-    const { playerX, playerY } = player;
-
-    const isPlayerXOutOfBounds = playerX < 0 || playerX >= width;
-    const isPlayerYOutOfBounds = playerY < 0 || playerY >= height;
-
-    let finalPlayerX = playerX;
-    let finalPlayerY = playerY;
-
-    if (isPlayerXOutOfBounds) {
-      finalPlayerX = playerX < 0 ? width - 1 : 0;
-    }
-
-    if (isPlayerYOutOfBounds) {
-      finalPlayerY = playerY < 0 ? height - 1 : 0;
-    }
-
-    const finalPlayerPosition = player.clone({
-      playerX: finalPlayerX,
-      playerY: finalPlayerY,
-    });
-
-    return finalPlayerPosition;
   }
 }

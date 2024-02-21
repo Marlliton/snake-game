@@ -1,17 +1,20 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { UniqueEntityId } from "@/common/entities/unique-entity-id";
-import { Fruit } from "@/common/value-objects/Fruit";
-import { Player } from "@/common/value-objects/Player";
-import { Game, GameProps } from "@/domain/enterprise/entities/snake/Game";
+import { Screen } from "@/common/value-objects/Screen";
+import { Fruit } from "@/domain/enterprise/entities/fruit";
+import { Game, GameProps } from "@/domain/enterprise/entities/game";
+import { Player } from "@/domain/enterprise/entities/player";
 
 let state: GameProps;
 let player: Player;
 let fruit: Fruit;
+let screen: Screen;
 describe("Game", () => {
   beforeEach(() => {
     player = Player.createPlayer({}, new UniqueEntityId("player1"));
     fruit = Fruit.createFruit({}, new UniqueEntityId("fruit1"));
+    screen = Screen.createScreen({ height: 10, width: 10 });
     state = {
       players: {
         [player.id.value]: player,
@@ -19,10 +22,7 @@ describe("Game", () => {
       fruits: {
         [fruit.id.value]: fruit,
       },
-      screen: {
-        height: 10,
-        width: 10,
-      },
+      screen,
     };
   });
   it("should be able to create a new game", () => {
