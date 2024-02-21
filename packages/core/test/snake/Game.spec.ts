@@ -129,8 +129,15 @@ describe("Game", () => {
   });
 
   it("should be able to remove a player", () => {
-    const gameWithoutPlayer = Game.createGame(state).removePlayer(player.id);
-    expect(Object.keys(gameWithoutPlayer.players)).toHaveLength(0);
-    expect(gameWithoutPlayer.player(player.id)).toBeNull();
+    const secondPlayer = Player.createPlayer({});
+    const gameWithTwoPlayers = Game.createGame(state).addPlayer(secondPlayer);
+    expect(Object.keys(gameWithTwoPlayers.players)).toHaveLength(2);
+
+    const gameWitOnlyOnePlayer = gameWithTwoPlayers.removePlayer(player.id);
+    expect(Object.keys(gameWitOnlyOnePlayer.players)).toHaveLength(1);
+
+    const gameWithoutPlayers = gameWitOnlyOnePlayer.removePlayer(secondPlayer.id);
+    expect(Object.keys(gameWithoutPlayers.players)).toHaveLength(0);
+    expect(gameWithoutPlayers.player(player.id)).toBeNull();
   });
 });
