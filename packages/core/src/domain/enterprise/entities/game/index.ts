@@ -1,9 +1,9 @@
 import { Entity } from "@/common/entities/entity";
 import { UniqueEntityId } from "@/common/entities/unique-entity-id";
-import { Screen } from "@/common/value-objects/Screen";
 
 import { Fruit } from "../fruit";
 import { Player } from "../player";
+import { Screen } from "../value-objects/Screen";
 
 export interface GameProps {
   players: Record<string, Player>;

@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { UniqueEntityId } from "@/common/entities/unique-entity-id";
-import { Screen } from "@/common/value-objects/Screen";
 import { Fruit } from "@/domain/enterprise/entities/fruit";
 import { Game, GameProps } from "@/domain/enterprise/entities/game";
 import { Player } from "@/domain/enterprise/entities/player";
+import { Screen } from "@/domain/enterprise/entities/value-objects/Screen";
 
 let state: GameProps;
 let player: Player;
