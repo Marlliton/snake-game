@@ -14,10 +14,6 @@ export interface GameProps {
 }
 
 export class Game extends Entity<Game, GameProps> {
-  protected constructor(props: GameProps) {
-    super(props);
-  }
-
   get players() {
     return this.props.players;
   }
