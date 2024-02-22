@@ -1,6 +1,6 @@
 type coordinates = { x: number; y: number };
 
-interface ScreenProps {
+export interface ScreenProps {
   width: number;
   height: number;
 }

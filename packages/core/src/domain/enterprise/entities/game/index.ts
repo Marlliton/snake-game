@@ -5,6 +5,10 @@ import { Fruit } from "../fruit";
 import { Player } from "../player";
 import { Screen } from "../value-objects/Screen";
 
+type acceptedMoves = {
+  [key: string]: (player: Player) => Game;
+};
+
 export interface GameProps {
   players: Record<string, Player>;
   fruits: Record<string, Fruit>;
@@ -42,7 +46,39 @@ export class Game extends Entity<Game, GameProps> {
     return this.clone({ players: remainingPlayers });
   }
 
-  movePlayer(player: Player): Game {
+  movePlayer(playerId: UniqueEntityId, command: string): Game {
+    const movingPlayer = this.player(playerId);
+    if (!movingPlayer) return this;
+
+    const acceptedMoves: acceptedMoves = {
+      up: (player: Player): Game => {
+        const { playerY: y } = player;
+        return this.move(player.clone({ playerY: y - 1 }));
+      },
+      right: (player: Player): Game => {
+        const { playerX: x } = player;
+        return this.move(player.clone({ playerX: x + 1 }));
+      },
+      down: (player: Player): Game => {
+        const { playerY: y } = player;
+        return this.move(player.clone({ playerY: y + 1 }));
+      },
+      left: (player: Player): Game => {
+        const { playerX: x } = player;
+        return this.move(player.clone({ playerX: x - 1 }));
+      },
+    };
+
+    const moveFunction = acceptedMoves[command];
+
+    if (moveFunction) {
+      return moveFunction(movingPlayer);
+    }
+
+    return this;
+  }
+
+  private move(player: Player): Game {
     const { x, y } = this.screen.checkAndForceCorrectMovement({
       x: player.playerX,
       y: player.playerY,
