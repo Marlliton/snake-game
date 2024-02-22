@@ -53,19 +53,19 @@ export class Game extends Entity<Game, GameProps> {
     const acceptedMoves: acceptedMoves = {
       up: (player: Player): Game => {
         const { playerY: y } = player;
-        return this.move(player.clone({ playerY: y - 1 }));
+        return this.move(player.clone({ playerY: y - 1, lastMovement: "up" }));
       },
       right: (player: Player): Game => {
         const { playerX: x } = player;
-        return this.move(player.clone({ playerX: x + 1 }));
+        return this.move(player.clone({ playerX: x + 1, lastMovement: "right" }));
       },
       down: (player: Player): Game => {
         const { playerY: y } = player;
-        return this.move(player.clone({ playerY: y + 1 }));
+        return this.move(player.clone({ playerY: y + 1, lastMovement: "down" }));
       },
       left: (player: Player): Game => {
         const { playerX: x } = player;
-        return this.move(player.clone({ playerX: x - 1 }));
+        return this.move(player.clone({ playerX: x - 1, lastMovement: "left" }));
       },
     };
 

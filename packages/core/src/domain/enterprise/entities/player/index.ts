@@ -6,6 +6,7 @@ import { UniqueEntityId } from "../../../../common/entities/unique-entity-id";
 interface PlayerProps {
   playerY: number;
   playerX: number;
+  lastMovement: "up" | "right" | "down" | "left" | null;
 }
 
 export class Player extends Entity<Player, PlayerProps> {
@@ -17,12 +18,20 @@ export class Player extends Entity<Player, PlayerProps> {
     return this.props.playerY;
   }
 
-  static createPlayer(props: Optional<PlayerProps, "playerX" | "playerY">, id?: UniqueEntityId) {
+  get lastMovement() {
+    return this.props.lastMovement;
+  }
+
+  static createPlayer(
+    props: Optional<PlayerProps, "playerX" | "playerY" | "lastMovement">,
+    id?: UniqueEntityId,
+  ) {
     const player = new Player(
       {
         ...props,
         playerX: props.playerX ?? Math.floor(Math.random() * 9), // TODO: TEMP
         playerY: props.playerY ?? Math.floor(Math.random() * 9), // TODO: TEMP
+        lastMovement: props.lastMovement ?? null,
       },
       id,
     );
