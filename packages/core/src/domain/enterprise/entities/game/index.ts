@@ -3,6 +3,7 @@ import { UniqueEntityId } from "@/common/entities/unique-entity-id";
 
 import { Fruit } from "../fruit";
 import { Player } from "../player";
+import { Coordinates } from "../value-objects/Coordinates";
 import { Screen } from "../value-objects/Screen";
 
 type acceptedMoves = {
@@ -43,7 +44,7 @@ export class Game extends Entity<Game, GameProps> {
     );
 
     if (isPlayersInTheSameCoordinate.length) {
-      const [x, y] = this.generateCoordinates(
+      const [x, y] = Coordinates.generateUniqueCoordinateXAndY(
         playersIterable.flatMap(([_, p]) => [...p.coordinates]),
         this.screen.width,
       );
@@ -69,7 +70,7 @@ export class Game extends Entity<Game, GameProps> {
     );
 
     if (isFruitsInTheSameCoordinate.length) {
-      const [x, y] = this.generateCoordinates(
+      const [x, y] = Coordinates.generateUniqueCoordinateXAndY(
         fruitsIterable.flatMap(([_, f]) => [...f.coordinates]),
         this.screen.width,
       );
@@ -155,24 +156,24 @@ export class Game extends Entity<Game, GameProps> {
     });
   }
 
-  private generateCoordinates(numbersToExclude: number[], maxValue: number): [number, number] {
-    let x: number | null = null;
-    let y: number | null = null;
+  // private generateCoordinates(numbersToExclude: number[], maxValue: number): [number, number] {
+  //   let x: number | null = null;
+  //   let y: number | null = null;
 
-    while (x === null || y === null) {
-      const num = Math.floor(Math.random() * (maxValue - 0 + 1)) + 0;
+  //   while (x === null || y === null) {
+  //     const num = Math.floor(Math.random() * (maxValue - 0 + 1)) + 0;
 
-      if (!numbersToExclude.includes(num)) {
-        if (x === null) {
-          x = num;
-        } else {
-          y = num;
-        }
-      }
-    }
+  //     if (!numbersToExclude.includes(num)) {
+  //       if (x === null) {
+  //         x = num;
+  //       } else {
+  //         y = num;
+  //       }
+  //     }
+  //   }
 
-    return [x, y];
-  }
+  //   return [x, y];
+  // }
 
   static createGame(props: GameProps): Game {
     const game = new Game({

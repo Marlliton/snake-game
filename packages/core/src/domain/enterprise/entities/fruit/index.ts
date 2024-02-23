@@ -2,6 +2,7 @@ import { Optional } from "@/types/Optional";
 
 import { Entity } from "../../../../common/entities/entity";
 import { UniqueEntityId } from "../../../../common/entities/unique-entity-id";
+import { Coordinates } from "../value-objects/Coordinates";
 
 interface FruitProps {
   fruitY: number;
@@ -22,11 +23,12 @@ export class Fruit extends Entity<Fruit, FruitProps> {
   }
 
   static createFruit(props: Optional<FruitProps, "fruitX" | "fruitY">, id?: UniqueEntityId) {
+    const [x, y] = Coordinates.generateUniqueCoordinateXAndY([], 9); // FIXME: tem que ser dinâmico de acordo com a screen
     const fruit = new Fruit(
       {
         ...props,
-        fruitX: props.fruitX ?? Math.floor(Math.random() * 9), // TODO: TEMP
-        fruitY: props.fruitY ?? Math.floor(Math.random() * 9), // TODO: TEMP
+        fruitX: props.fruitX ?? x, // TODO: TEMP
+        fruitY: props.fruitY ?? y, // TODO: TEMP
       },
       id,
     );
