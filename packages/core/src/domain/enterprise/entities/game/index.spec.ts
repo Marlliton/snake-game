@@ -104,14 +104,14 @@ describe("Game", () => {
   it("should be able to add a player", () => {
     expect(Object.keys(game.players)).toHaveLength(1);
 
-    const anotherPlayer = Player.createPlayer({});
+    const anotherPlayer = Player.createPlayer({ playerX: 0, playerY: 0 });
     const gameWithOneMorePlayer = game.addPlayer(anotherPlayer);
     expect(Object.keys(gameWithOneMorePlayer)).toHaveLength(2);
     expect(gameWithOneMorePlayer.player(anotherPlayer.id)!.id).toEqual(anotherPlayer.id);
   });
 
   it("should be able to remove a player", () => {
-    const secondPlayer = Player.createPlayer({});
+    const secondPlayer = Player.createPlayer({ playerX: 0, playerY: 0 });
     const gameWithTwoPlayers = Game.createGame(state).addPlayer(secondPlayer);
     expect(Object.keys(gameWithTwoPlayers.players)).toHaveLength(2);
 
@@ -124,7 +124,7 @@ describe("Game", () => {
   });
 
   it("should be able to add a fruit", () => {
-    const secondFruit = Fruit.createFruit({});
+    const secondFruit = Fruit.createFruit({ fruitX: 2, fruitY: 9 });
     const gameWithFruit = game.addFruit(secondFruit);
     expect(gameWithFruit.fruits[secondFruit.id.value]).toEqual(secondFruit);
   });
@@ -151,5 +151,15 @@ describe("Game", () => {
     const gameWithCollisionFruit = gameWithInitialState.movePlayer(player.id, "down");
     expect(Object.keys(gameWithCollisionFruit.fruits)).toHaveLength(1);
     expect(gameWithCollisionFruit.fruits[fruit.id.value]).toBeUndefined();
+  });
+
+  it("is should increase the player body when there is a collision with fruit", () => {
+    const fruit = Fruit.createFruit({ fruitX: 9, fruitY: 9 });
+    const gameWithCollisionFruit = game
+      .addPlayer(player.clone({ playerX: 9, playerY: 8 }))
+      .addFruit(fruit)
+      .movePlayer(player.id, "down");
+
+    expect(gameWithCollisionFruit.player(player.id)?.body).toHaveLength(1);
   });
 });

@@ -22,16 +22,8 @@ export class Fruit extends Entity<Fruit, FruitProps> {
     return [this.fruitX, this.fruitY];
   }
 
-  static createFruit(props: Optional<FruitProps, "fruitX" | "fruitY">, id?: UniqueEntityId) {
-    const [x, y] = Coordinates.generateUniqueCoordinateXAndY([], 9); // FIXME: tem que ser dinâmico de acordo com a screen
-    const fruit = new Fruit(
-      {
-        ...props,
-        fruitX: props.fruitX ?? x, // TODO: TEMP
-        fruitY: props.fruitY ?? y, // TODO: TEMP
-      },
-      id,
-    );
+  static createFruit(props: FruitProps, id?: UniqueEntityId) {
+    const fruit = new Fruit(props, id);
 
     return fruit;
   }

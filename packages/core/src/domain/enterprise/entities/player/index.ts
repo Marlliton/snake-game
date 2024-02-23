@@ -32,16 +32,12 @@ export class Player extends Entity<Player, PlayerProps> {
     return [this.playerX, this.playerY];
   }
 
-  static createPlayer(
-    props: Optional<PlayerProps, "playerX" | "playerY" | "lastMovement" | "body">,
-    id?: UniqueEntityId,
-  ) {
-    const [x, y] = Coordinates.generateUniqueCoordinateXAndY([], 9); // FIXME: TEM QUE VIR DO TAMANHO DA SCREEN
+  static createPlayer(props: Optional<PlayerProps, "lastMovement" | "body">, id?: UniqueEntityId) {
     const player = new Player(
       {
         ...props,
-        playerX: props.playerX ?? x, // TODO: TEMP
-        playerY: props.playerY ?? y, // TODO: TEMP
+        playerX: props.playerX, // TODO: TEMP
+        playerY: props.playerY, // TODO: TEMP
         lastMovement: props.lastMovement ?? null,
         body: props.body ?? [],
       },
