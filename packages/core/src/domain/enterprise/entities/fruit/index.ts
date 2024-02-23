@@ -1,8 +1,5 @@
-import { Optional } from "@/types/Optional";
-
 import { Entity } from "../../../../common/entities/entity";
 import { UniqueEntityId } from "../../../../common/entities/unique-entity-id";
-import { Coordinates } from "../value-objects/Coordinates";
 
 interface FruitProps {
   fruitY: number;
@@ -20,6 +17,12 @@ export class Fruit extends Entity<Fruit, FruitProps> {
 
   get coordinates() {
     return [this.fruitX, this.fruitY];
+  }
+
+  checkCollision(x: number, y: number) {
+    const isCollided = this.fruitX === x && this.fruitY === y;
+
+    return isCollided;
   }
 
   static createFruit(props: FruitProps, id?: UniqueEntityId) {

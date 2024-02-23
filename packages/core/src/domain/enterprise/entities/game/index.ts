@@ -123,24 +123,28 @@ export class Game extends Entity<Game, GameProps> {
 
     if (moveFunction) {
       const newGameState = moveFunction(movingPlayer);
-      const finalGameState = this.checkCollision(newGameState, movingPlayer.id);
+
+      const finalGameState = this.applyMovementEffects(newGameState, movingPlayer.id);
       return finalGameState;
     }
 
     return this;
   }
 
-  private checkCollision(gameState: Game, playerId: UniqueEntityId): Game {
+  private applyMovementEffects(gameState: Game, playerId: UniqueEntityId): Game {
     const movedPlayer = gameState.player(playerId);
 
-    const isFruitCollided = Object.entries(this.fruits).find(
-      ([_, fruit]) =>
-        fruit.fruitX === movedPlayer!.playerX && fruit.fruitY === movedPlayer!.playerY,
+    const isFruitCollided = Object.entries(this.fruits).find(([_, fruit]) =>
+      fruit.checkCollision(movedPlayer!.playerX, movedPlayer!.playerY),
     );
 
     if (isFruitCollided?.length) {
       const [_, fruit] = isFruitCollided;
-      return gameState.removeFruit(fruit.id);
+      const increasedPlayer = movedPlayer!.increaseBody();
+
+      return gameState.removeFruit(fruit.id).clone({
+        players: { ...this.players, [movedPlayer!.id.value]: increasedPlayer },
+      });
     }
     return gameState;
   }
@@ -155,25 +159,6 @@ export class Game extends Entity<Game, GameProps> {
       players: { ...this.players, [player.id.value]: player.clone({ playerX: x, playerY: y }) },
     });
   }
-
-  // private generateCoordinates(numbersToExclude: number[], maxValue: number): [number, number] {
-  //   let x: number | null = null;
-  //   let y: number | null = null;
-
-  //   while (x === null || y === null) {
-  //     const num = Math.floor(Math.random() * (maxValue - 0 + 1)) + 0;
-
-  //     if (!numbersToExclude.includes(num)) {
-  //       if (x === null) {
-  //         x = num;
-  //       } else {
-  //         y = num;
-  //       }
-  //     }
-  //   }
-
-  //   return [x, y];
-  // }
 
   static createGame(props: GameProps): Game {
     const game = new Game({

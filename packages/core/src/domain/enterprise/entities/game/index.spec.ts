@@ -161,5 +161,31 @@ describe("Game", () => {
       .movePlayer(player.id, "down");
 
     expect(gameWithCollisionFruit.player(player.id)?.body).toHaveLength(1);
+    expect(gameWithCollisionFruit.player(player.id)).toEqual(
+      expect.objectContaining({
+        playerX: 9,
+        playerY: 9,
+      }),
+    );
+
+    const newFruit1 = Fruit.createFruit({ fruitX: 6, fruitY: 8 });
+    const newFruit2 = Fruit.createFruit({ fruitX: 7, fruitY: 8 });
+    const newFruit3 = Fruit.createFruit({ fruitX: 8, fruitY: 8 });
+    const gameWithTwoCollisionFruits = game
+      .addPlayer(player.clone({ playerX: 5, playerY: 8 }))
+      .addFruit(newFruit1)
+      .addFruit(newFruit2)
+      .addFruit(newFruit3)
+      .movePlayer(player.id, "right")
+      .movePlayer(player.id, "right")
+      .movePlayer(player.id, "right");
+
+    expect(gameWithTwoCollisionFruits.player(player.id)?.body).toHaveLength(3);
+    expect(gameWithTwoCollisionFruits.player(player.id)).toEqual(
+      expect.objectContaining({
+        playerX: 8,
+        playerY: 8,
+      }),
+    );
   });
 });

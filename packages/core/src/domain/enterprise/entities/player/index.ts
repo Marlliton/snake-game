@@ -2,7 +2,6 @@ import { Optional } from "@/types/Optional";
 
 import { Entity } from "../../../../common/entities/entity";
 import { UniqueEntityId } from "../../../../common/entities/unique-entity-id";
-import { Coordinates } from "../value-objects/Coordinates";
 
 interface PlayerProps {
   playerY: number;
@@ -32,12 +31,15 @@ export class Player extends Entity<Player, PlayerProps> {
     return [this.playerX, this.playerY];
   }
 
+  increaseBody() {
+    const newBody = this.body.concat(0);
+    return this.clone({ body: newBody });
+  }
+
   static createPlayer(props: Optional<PlayerProps, "lastMovement" | "body">, id?: UniqueEntityId) {
     const player = new Player(
       {
         ...props,
-        playerX: props.playerX, // TODO: TEMP
-        playerY: props.playerY, // TODO: TEMP
         lastMovement: props.lastMovement ?? null,
         body: props.body ?? [],
       },
