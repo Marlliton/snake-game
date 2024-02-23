@@ -20,6 +20,10 @@ export class Game extends Entity<Game, GameProps> {
     return this.props.players;
   }
 
+  get fruits() {
+    return this.props.fruits;
+  }
+
   get screen(): Screen {
     return this.props.screen;
   }
@@ -32,6 +36,23 @@ export class Game extends Entity<Game, GameProps> {
   }
 
   addPlayer(player: Player): Game {
+    const { playerX, playerY } = player;
+    const playersIterable = Object.entries(this.players);
+    const isPlayersInTheSameCoordinate = playersIterable.filter(
+      ([_, p]) => p.playerX === playerX && p.playerY === playerY,
+    );
+
+    if (isPlayersInTheSameCoordinate.length) {
+      const [x, y] = this.generateCoordinates(
+        playersIterable.flatMap(([_, p]) => [...p.coordinates]),
+        this.screen.width,
+      );
+
+      return this.clone({
+        players: { ...this.players, [player.id.value]: player.clone({ playerX: x, playerY: y }) },
+      });
+    }
+
     return this.clone({
       players: {
         ...this.players,
@@ -40,10 +61,38 @@ export class Game extends Entity<Game, GameProps> {
     });
   }
 
+  addFruit(fruit: Fruit): Game {
+    const { fruitX, fruitY } = fruit;
+    const fruitsIterable = Object.entries(this.fruits);
+    const isFruitsInTheSameCoordinate = fruitsIterable.filter(
+      ([_, f]) => f.fruitX === fruitX && f.fruitY === fruitY,
+    );
+
+    if (isFruitsInTheSameCoordinate.length) {
+      const [x, y] = this.generateCoordinates(
+        fruitsIterable.flatMap(([_, f]) => [...f.coordinates]),
+        this.screen.width,
+      );
+
+      return this.clone({
+        fruits: { ...this.fruits, [fruit.id.value]: fruit.clone({ fruitX: x, fruitY: y }) },
+      });
+    }
+    return this.clone({
+      fruits: { ...this.fruits, [fruit.id.value]: fruit },
+    });
+  }
+
   removePlayer(playerId: UniqueEntityId): Game {
     const { [playerId.value]: _, ...remainingPlayers } = this.players;
 
     return this.clone({ players: remainingPlayers });
+  }
+
+  removeFruit(fruitId: UniqueEntityId) {
+    const { [fruitId.value]: _, ...remainingFruits } = this.fruits;
+
+    return this.clone({ fruits: remainingFruits });
   }
 
   movePlayer(playerId: UniqueEntityId, command: string): Game {
@@ -72,10 +121,27 @@ export class Game extends Entity<Game, GameProps> {
     const moveFunction = acceptedMoves[command];
 
     if (moveFunction) {
-      return moveFunction(movingPlayer);
+      const newGameState = moveFunction(movingPlayer);
+      const finalGameState = this.checkCollision(newGameState, movingPlayer.id);
+      return finalGameState;
     }
 
     return this;
+  }
+
+  private checkCollision(gameState: Game, playerId: UniqueEntityId): Game {
+    const movedPlayer = gameState.player(playerId);
+
+    const isFruitCollided = Object.entries(this.fruits).find(
+      ([_, fruit]) =>
+        fruit.fruitX === movedPlayer!.playerX && fruit.fruitY === movedPlayer!.playerY,
+    );
+
+    if (isFruitCollided?.length) {
+      const [_, fruit] = isFruitCollided;
+      return gameState.removeFruit(fruit.id);
+    }
+    return gameState;
   }
 
   private move(player: Player): Game {
@@ -87,6 +153,25 @@ export class Game extends Entity<Game, GameProps> {
     return this.clone({
       players: { ...this.players, [player.id.value]: player.clone({ playerX: x, playerY: y }) },
     });
+  }
+
+  private generateCoordinates(numbersToExclude: number[], maxValue: number): [number, number] {
+    let x: number | null = null;
+    let y: number | null = null;
+
+    while (x === null || y === null) {
+      const num = Math.floor(Math.random() * (maxValue - 0 + 1)) + 0;
+
+      if (!numbersToExclude.includes(num)) {
+        if (x === null) {
+          x = num;
+        } else {
+          y = num;
+        }
+      }
+    }
+
+    return [x, y];
   }
 
   static createGame(props: GameProps): Game {

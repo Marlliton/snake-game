@@ -17,6 +17,10 @@ export class Fruit extends Entity<Fruit, FruitProps> {
     return this.props.fruitY;
   }
 
+  get coordinates() {
+    return [this.fruitX, this.fruitY];
+  }
+
   static createFruit(props: Optional<FruitProps, "fruitX" | "fruitY">, id?: UniqueEntityId) {
     const fruit = new Fruit(
       {

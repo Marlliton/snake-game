@@ -107,7 +107,7 @@ describe("Game", () => {
     const anotherPlayer = Player.createPlayer({});
     const gameWithOneMorePlayer = game.addPlayer(anotherPlayer);
     expect(Object.keys(gameWithOneMorePlayer)).toHaveLength(2);
-    expect(gameWithOneMorePlayer.player(anotherPlayer.id)).toEqual(anotherPlayer);
+    expect(gameWithOneMorePlayer.player(anotherPlayer.id)!.id).toEqual(anotherPlayer.id);
   });
 
   it("should be able to remove a player", () => {
@@ -123,7 +123,33 @@ describe("Game", () => {
     expect(gameWithoutPlayers.player(player.id)).toBeNull();
   });
 
+  it("should be able to add a fruit", () => {
+    const secondFruit = Fruit.createFruit({});
+    const gameWithFruit = game.addFruit(secondFruit);
+    expect(gameWithFruit.fruits[secondFruit.id.value]).toEqual(secondFruit);
+  });
+
+  it("should not be possible to add a fruit to an already occupied coordinate", () => {
+    const fruit2 = Fruit.createFruit({ fruitX: 2, fruitY: 4 });
+    const fruit3 = Fruit.createFruit({ fruitX: 2, fruitY: 4 });
+    const newGame = game.addFruit(fruit2).addFruit(fruit3);
+
+    const fruits = Object.entries(newGame.fruits).filter(
+      ([_, fruit]) => fruit.fruitX === 2 && fruit.fruitY === 4,
+    );
+    expect(fruits).toHaveLength(1);
+  });
+
   it("should be able to detect player and fruit collision", () => {
-    console.log(JSON.stringify(game, null, 2));
+    const fruit = Fruit.createFruit({ fruitX: 9, fruitY: 9 });
+    const gameWithInitialState = Game.createGame(state)
+      .addPlayer(player.clone({ playerX: 9, playerY: 8 }))
+      .addFruit(fruit);
+    expect(Object.keys(gameWithInitialState.fruits)).toHaveLength(2);
+    expect(gameWithInitialState.fruits[fruit.id.value]).toEqual(fruit);
+
+    const gameWithCollisionFruit = gameWithInitialState.movePlayer(player.id, "down");
+    expect(Object.keys(gameWithCollisionFruit.fruits)).toHaveLength(1);
+    expect(gameWithCollisionFruit.fruits[fruit.id.value]).toBeUndefined();
   });
 });

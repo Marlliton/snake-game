@@ -22,6 +22,10 @@ export class Player extends Entity<Player, PlayerProps> {
     return this.props.lastMovement;
   }
 
+  get coordinates() {
+    return [this.playerX, this.playerY];
+  }
+
   static createPlayer(
     props: Optional<PlayerProps, "playerX" | "playerY" | "lastMovement">,
     id?: UniqueEntityId,
