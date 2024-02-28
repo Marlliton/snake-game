@@ -51,7 +51,7 @@ describe("Game", () => {
     );
   });
 
-  it.skip("should not move the player beyond the screen boundary", () => {
+  it("should not move the player beyond the screen boundary", () => {
     // Teste movendo o jogador para fora da tela na direção X (horizontal) à direita
     const playerOnTheRightEdge = player.clone({ x: 9 });
     const gameWithXOutOfBoundsRight = Game.createGame(state)
@@ -101,7 +101,7 @@ describe("Game", () => {
     );
   });
 
-  it.skip("should not be able to move a player with a wrong command", () => {
+  it("should not be able to move a player with a wrong command", () => {
     const playerOnTheTopEdge = player.clone({ x: 0, y: 0 });
     const gameState = Game.createGame(state)
       .addPlayer(playerOnTheTopEdge)
@@ -154,7 +154,7 @@ describe("Game", () => {
     expect(fruits).toHaveLength(1);
   });
 
-  it.skip("should be able to detect player and fruit collision", () => {
+  it("should be able to detect player and fruit collision", () => {
     const fruit = Fruit.createFruit({ fruitX: 9, fruitY: 9 });
     const gameWithInitialState = Game.createGame(state)
       .addPlayer(player.clone({ x: 9, y: 8 }))
