@@ -6,10 +6,6 @@ import { Player } from "../player";
 import { Coordinates } from "../value-objects/Coordinates";
 import { Screen } from "../value-objects/Screen";
 
-type acceptedMoves = {
-  [key: string]: (player: Player) => Game;
-};
-
 export interface GameProps {
   players: Record<string, Player>;
   fruits: Record<string, Fruit>;
@@ -45,12 +41,12 @@ export class Game extends Entity<Game, GameProps> {
 
     if (isPlayersInTheSameCoordinate.length) {
       const [x, y] = Coordinates.generateUniqueCoordinateXAndY(
-        playersIterable.flatMap(([_, p]) => [...p.coordinates]),
+        playersIterable.flatMap(([_, p]) => Object.values(p.headCoordinates)),
         this.screen.width,
       );
 
       return this.clone({
-        players: { ...this.players, [player.id.value]: player.clone({ playerX: x, playerY: y }) },
+        players: { ...this.players, [player.id.value]: player.clone({ x, y }) },
       });
     }
 

@@ -4,24 +4,29 @@ import { Entity } from "../../../../common/entities/entity";
 import { UniqueEntityId } from "../../../../common/entities/unique-entity-id";
 import { Screen } from "../value-objects/Screen";
 
-interface PlayerProps {
-  playerY: number;
-  playerX: number;
-  lastMovement: "up" | "right" | "down" | "left" | null;
-  body: number[];
-}
+type Body = {
+  x: number;
+  y: number;
+};
 
 type acceptedMoves = {
   [key: string]: () => Player;
 };
 
+interface PlayerProps {
+  x: number;
+  y: number;
+  lastMovement: "up" | "right" | "down" | "left" | null;
+  body: Body[];
+}
+
 export class Player extends Entity<Player, PlayerProps> {
   get playerX() {
-    return this.props.playerX;
+    return this.props.x;
   }
 
   get playerY() {
-    return this.props.playerY;
+    return this.props.y;
   }
 
   get body() {
@@ -32,32 +37,59 @@ export class Player extends Entity<Player, PlayerProps> {
     return this.props.lastMovement;
   }
 
-  get coordinates() {
-    return [this.playerX, this.playerY];
+  get headCoordinates() {
+    return {
+      x: this.playerX,
+      y: this.playerY,
+    };
+  }
+
+  get fullBodyCoordinate() {
+    return [this.headCoordinates].concat(this.body);
   }
 
   increaseBody() {
-    const newBody = this.body.concat(0);
-    return this.clone({ body: newBody });
+    const lastCoordinate = this.fullBodyCoordinate.slice(-1)[0];
+    if (this.lastMovement === "up") {
+      const newBodyItem: Body = { y: lastCoordinate!.y + 1, x: lastCoordinate!.x };
+
+      return this.clone({ body: this.body.concat(newBodyItem) });
+    }
+    if (this.lastMovement === "down") {
+      const newBodyItem: Body = { y: lastCoordinate!.y - 1, x: lastCoordinate!.x };
+
+      return this.clone({ body: this.body.concat(newBodyItem) });
+    }
+    if (this.lastMovement === "left") {
+      const newBodyItem: Body = { y: lastCoordinate!.y, x: lastCoordinate!.x + 1 };
+
+      return this.clone({ body: this.body.concat(newBodyItem) });
+    }
+    if (this.lastMovement === "right") {
+      const newBodyItem: Body = { y: lastCoordinate!.y, x: lastCoordinate!.x - 1 };
+      return this.clone({ body: this.body.concat(newBodyItem) });
+    }
+
+    return this;
   }
 
   movePlayer(command: string, screen: Screen) {
     const acceptedMoves: acceptedMoves = {
       up: (): Player => {
         const { playerY: y } = this;
-        return this.move(this.clone({ playerY: y - 1, lastMovement: "up" }), screen);
+        return this.move(this.clone({ y: y - 1, lastMovement: "up" }), screen);
       },
       right: (): Player => {
         const { playerX: x } = this;
-        return this.move(this.clone({ playerX: x + 1, lastMovement: "right" }), screen);
+        return this.move(this.clone({ x: x + 1, lastMovement: "right" }), screen);
       },
       down: (): Player => {
         const { playerY: y } = this;
-        return this.move(this.clone({ playerY: y + 1, lastMovement: "down" }), screen);
+        return this.move(this.clone({ y: y + 1, lastMovement: "down" }), screen);
       },
       left: (): Player => {
         const { playerX: x } = this;
-        return this.move(this.clone({ playerX: x - 1, lastMovement: "left" }), screen);
+        return this.move(this.clone({ x: x - 1, lastMovement: "left" }), screen);
       },
     };
 
@@ -76,7 +108,7 @@ export class Player extends Entity<Player, PlayerProps> {
       y: player.playerY,
     });
 
-    return this.clone({ playerX: x, playerY: y });
+    return player.clone({ x, y });
   }
 
   static createPlayer(props: Optional<PlayerProps, "lastMovement" | "body">, id?: UniqueEntityId) {
