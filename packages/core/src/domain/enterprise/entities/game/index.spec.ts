@@ -188,4 +188,8 @@ describe("Game", () => {
       }),
     );
   });
+
+  it("should be able to detect player body collisions", () => {
+    // TODO: Implementar essa lógica
+  });
 });

@@ -97,67 +97,30 @@ export class Game extends Entity<Game, GameProps> {
   }
 
   movePlayer(playerId: UniqueEntityId, command: string): Game {
-    const movingPlayer = this.player(playerId);
-    if (!movingPlayer) return this;
+    const playerToMove = this.player(playerId);
+    if (!playerToMove) return this;
 
-    const acceptedMoves: acceptedMoves = {
-      up: (player: Player): Game => {
-        const { playerY: y } = player;
-        return this.move(player.clone({ playerY: y - 1, lastMovement: "up" }));
-      },
-      right: (player: Player): Game => {
-        const { playerX: x } = player;
-        return this.move(player.clone({ playerX: x + 1, lastMovement: "right" }));
-      },
-      down: (player: Player): Game => {
-        const { playerY: y } = player;
-        return this.move(player.clone({ playerY: y + 1, lastMovement: "down" }));
-      },
-      left: (player: Player): Game => {
-        const { playerX: x } = player;
-        return this.move(player.clone({ playerX: x - 1, lastMovement: "left" }));
-      },
-    };
+    const movedPlayer = playerToMove.movePlayer(command, this.screen);
 
-    const moveFunction = acceptedMoves[command];
-
-    if (moveFunction) {
-      const newGameState = moveFunction(movingPlayer);
-
-      const finalGameState = this.applyMovementEffects(newGameState, movingPlayer.id);
-      return finalGameState;
-    }
-
-    return this;
+    const finalGameState = this.applyMovementEffects(movedPlayer);
+    return finalGameState;
   }
 
-  private applyMovementEffects(gameState: Game, playerId: UniqueEntityId): Game {
-    const movedPlayer = gameState.player(playerId);
-
+  private applyMovementEffects(movedPlayer: Player): Game {
     const isFruitCollided = Object.entries(this.fruits).find(([_, fruit]) =>
-      fruit.checkCollision(movedPlayer!.playerX, movedPlayer!.playerY),
+      fruit.checkCollision(movedPlayer.playerX, movedPlayer.playerY),
     );
 
     if (isFruitCollided?.length) {
       const [_, fruit] = isFruitCollided;
-      const increasedPlayer = movedPlayer!.increaseBody();
+      const increasedPlayer = movedPlayer.increaseBody();
 
-      return gameState.removeFruit(fruit.id).clone({
-        players: { ...this.players, [movedPlayer!.id.value]: increasedPlayer },
+      return this.removeFruit(fruit.id).clone({
+        players: { ...this.players, [movedPlayer.id.value]: increasedPlayer },
       });
     }
-    return gameState;
-  }
 
-  private move(player: Player): Game {
-    const { x, y } = this.screen.checkAndForceCorrectMovement({
-      x: player.playerX,
-      y: player.playerY,
-    });
-
-    return this.clone({
-      players: { ...this.players, [player.id.value]: player.clone({ playerX: x, playerY: y }) },
-    });
+    return this.clone({ players: { ...this.players, [movedPlayer.id.value]: movedPlayer } });
   }
 
   static createGame(props: GameProps): Game {
