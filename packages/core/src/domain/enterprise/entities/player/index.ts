@@ -49,14 +49,18 @@ export class Player extends Entity<Player, PlayerProps> {
   }
 
   increaseBody() {
+    if (!this.lastMovement) return this;
+
     const movementMap = {
       up: { y: 1, x: 0 },
       down: { y: -1, x: 0 },
       left: { y: 0, x: 1 },
       right: { y: 0, x: -1 },
     };
+
     const lastCoordinate = this.fullBodyCoordinate.slice(-1)[0];
-    const movement = movementMap[this.lastMovement!];
+    const movement = movementMap[this.lastMovement];
+
     if (movement) {
       const newBodyItem: Body = {
         y: lastCoordinate!.y + movement.y,
