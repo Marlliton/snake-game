@@ -191,24 +191,24 @@ describe("Game", () => {
       .addFruit(newFruit1)
       .addFruit(newFruit2)
       .addFruit(newFruit3)
-      .movePlayer(player.id, "right")
-      .movePlayer(player.id, "right")
-      .movePlayer(player.id, "right");
+      .movePlayer(p.id, "right")
+      .movePlayer(p.id, "right")
+      .movePlayer(p.id, "right");
 
     expect(gameWithTwoCollisionFruits.player(player.id)?.body).toHaveLength(3);
     expect(gameWithTwoCollisionFruits.player(player.id)?.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          x: 5,
+          x: 7,
           y: 8,
         }),
         expect.objectContaining({
-          x: 4,
+          x: 6,
           y: 8,
         }),
 
         expect.objectContaining({
-          x: 3,
+          x: 5,
           y: 8,
         }),
       ]),

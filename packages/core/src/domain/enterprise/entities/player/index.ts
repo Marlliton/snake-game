@@ -103,12 +103,28 @@ export class Player extends Entity<Player, PlayerProps> {
   }
 
   private move(player: Player, screen: Screen) {
-    const { x, y } = screen.checkAndForceCorrectMovement({
+    const { x: finalX, y: finalY } = screen.checkAndForceCorrectMovement({
       x: player.playerX,
       y: player.playerY,
     });
 
-    return player.clone({ x, y });
+    let prevX = this.playerX;
+    let prevY = this.playerY;
+
+    const newBodyCoordinates = player.body.map((body) => {
+      const tempX = body.x;
+      const tempY = body.y;
+
+      body.x = prevX;
+      body.y = prevY;
+
+      prevX = tempX;
+      prevY = tempY;
+
+      return body;
+    });
+
+    return player.clone({ x: finalX, y: finalY, body: newBodyCoordinates });
   }
 
   static createPlayer(props: Optional<PlayerProps, "lastMovement" | "body">, id?: UniqueEntityId) {
