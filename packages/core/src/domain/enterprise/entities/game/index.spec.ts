@@ -216,6 +216,56 @@ describe("Game", () => {
   });
 
   it("should be able to detect player body collisions", () => {
-    // TODO: Implementar essa lógica
+    const player1 = player.clone({
+      x: 3,
+      y: 4,
+      body: [
+        { x: 3, y: 3 },
+        { x: 3, y: 2 },
+      ],
+    });
+    const player2 = Player.createPlayer(
+      {
+        x: 5,
+        y: 5,
+        body: [
+          { x: 4, y: 5 },
+          { x: 3, y: 5 },
+          { x: 2, y: 5 },
+        ],
+      },
+      new UniqueEntityId("player2"),
+    );
+    const newGame = game.addPlayer(player1).addPlayer(player2).movePlayer(player1.id, "down");
+
+    expect(newGame.player(player1.id)?.body).toHaveLength(0);
+    expect(Object.values(newGame.fruits)).toHaveLength(3);
+  });
+
+  it("should not collide", () => {
+    const player1 = player.clone({
+      x: 3,
+      y: 4,
+      body: [
+        { x: 3, y: 3 },
+        { x: 3, y: 2 },
+      ],
+    });
+    const player2 = Player.createPlayer(
+      {
+        x: 5,
+        y: 5,
+        body: [
+          { x: 4, y: 5 },
+          { x: 3, y: 5 },
+          { x: 2, y: 5 },
+        ],
+      },
+      new UniqueEntityId("player2"),
+    );
+    const newGame = game.addPlayer(player1).addPlayer(player2).movePlayer(player1.id, "left");
+
+    expect(newGame.player(player1.id)?.body).toHaveLength(2);
+    expect(Object.values(newGame.fruits)).toHaveLength(1);
   });
 });

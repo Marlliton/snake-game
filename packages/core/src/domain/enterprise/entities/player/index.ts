@@ -48,6 +48,13 @@ export class Player extends Entity<Player, PlayerProps> {
     return [this.headCoordinates].concat(this.body);
   }
 
+  clearBodyPoints() {
+    return {
+      points: this.body,
+      playerWithAnEmptyBody: this.clone({ body: [] }),
+    };
+  }
+
   increaseBody() {
     if (!this.lastMovement) return this;
 

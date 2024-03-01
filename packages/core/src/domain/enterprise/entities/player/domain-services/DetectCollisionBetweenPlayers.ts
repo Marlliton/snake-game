@@ -2,9 +2,22 @@ import { Player } from "..";
 
 export class DetectCollisionBetweenPlayers {
   constructor(
-    private players: Player[],
-    private movedPlayer: Player,
+    private players: Record<string, Player>,
+    private playerMoved: Player,
   ) {}
 
-  execute() {}
+  execute() {
+    for (const currentPlayer of Object.values(this.players)) {
+      if (!this.playerMoved.equals(currentPlayer)) {
+        const { playerX, playerY } = this.playerMoved;
+
+        const isPlayerCollided = currentPlayer.fullBodyCoordinate.some(
+          (coordinate) => playerX === coordinate.x && playerY === coordinate.y,
+        );
+        return isPlayerCollided;
+      }
+    }
+
+    return false;
+  }
 }

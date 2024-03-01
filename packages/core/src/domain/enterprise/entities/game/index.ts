@@ -3,6 +3,7 @@ import { UniqueEntityId } from "@/common/entities/unique-entity-id";
 
 import { Fruit } from "../fruit";
 import { Player } from "../player";
+import { DetectCollisionBetweenPlayers } from "../player/domain-services/DetectCollisionBetweenPlayers";
 import { Coordinates } from "../value-objects/Coordinates";
 import { Screen } from "../value-objects/Screen";
 
@@ -96,27 +97,51 @@ export class Game extends Entity<Game, GameProps> {
     const playerToMove = this.player(playerId);
     if (!playerToMove) return this;
 
-    const movedPlayer = playerToMove.movePlayer(command, this.screen);
+    const playerMoved = playerToMove.movePlayer(command, this.screen);
 
-    const finalGameState = this.applyMovementEffects(movedPlayer);
+    const finalGameState = this.applyMovementEffects(playerMoved);
     return finalGameState;
   }
 
-  private applyMovementEffects(movedPlayer: Player): Game {
+  private applyMovementEffects(playerMoved: Player): Game {
     const isFruitCollided = Object.entries(this.fruits).find(([_, fruit]) =>
-      fruit.checkCollision(movedPlayer.playerX, movedPlayer.playerY),
+      fruit.checkCollision(playerMoved.playerX, playerMoved.playerY),
     );
+    const isPlayerCollided = new DetectCollisionBetweenPlayers(this.players, playerMoved).execute();
 
-    if (isFruitCollided?.length) {
-      const [_, fruit] = isFruitCollided;
-      const increasedPlayer = movedPlayer.increaseBody();
+    if (isPlayerCollided) {
+      const { points, playerWithAnEmptyBody } = playerMoved.clearBodyPoints();
+      const createdFruits = this.addFruitsFromPoints(points);
 
-      return this.removeFruit(fruit.id).clone({
-        players: { ...this.players, [movedPlayer.id.value]: increasedPlayer },
+      return this.clone({
+        players: { ...this.players, [playerWithAnEmptyBody.id.value]: playerWithAnEmptyBody },
+        fruits: { ...this.fruits, ...createdFruits },
       });
     }
 
-    return this.clone({ players: { ...this.players, [movedPlayer.id.value]: movedPlayer } });
+    if (isFruitCollided?.length) {
+      const [_, fruit] = isFruitCollided;
+      const increasedPlayer = playerMoved.increaseBody();
+
+      return this.removeFruit(fruit.id).clone({
+        players: { ...this.players, [playerMoved.id.value]: increasedPlayer },
+      });
+    }
+
+    return this.clone({ players: { ...this.players, [playerMoved.id.value]: playerMoved } });
+  }
+
+  private addFruitsFromPoints(points: { x: number; y: number }[]) {
+    const fruits: Record<string, Fruit> = points.reduce(
+      (fruits, currentPoint) => {
+        const fruit = Fruit.createFruit({ fruitX: currentPoint.x, fruitY: currentPoint.y });
+        fruits[fruit.id.value] = fruit;
+        return fruits;
+      },
+      {} as Record<string, Fruit>,
+    );
+
+    return fruits;
   }
 
   static createGame(props: GameProps): Game {
