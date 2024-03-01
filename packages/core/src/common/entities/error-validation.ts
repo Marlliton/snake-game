@@ -1,4 +1,4 @@
-import { Optional } from "@/types/Optional";
+import { Optional } from "@/common/types/Optional";
 
 import { Err } from "../error/err";
 

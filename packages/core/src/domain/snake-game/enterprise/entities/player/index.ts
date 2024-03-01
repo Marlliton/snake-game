@@ -1,7 +1,7 @@
-import { Optional } from "@/types/Optional";
+import { Entity } from "@/common/entities/entity";
+import { UniqueEntityId } from "@/common/entities/unique-entity-id";
+import { Optional } from "@/common/types/Optional";
 
-import { Entity } from "../../../../common/entities/entity";
-import { UniqueEntityId } from "../../../../common/entities/unique-entity-id";
 import { Screen } from "../value-objects/Screen";
 
 type Body = {

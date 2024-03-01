@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { UniqueEntityId } from "@/common/entities/unique-entity-id";
-import { Optional } from "@/types/Optional";
+import { Optional } from "@/common/types/Optional";
 
 import { Entity } from "./entity";
 
