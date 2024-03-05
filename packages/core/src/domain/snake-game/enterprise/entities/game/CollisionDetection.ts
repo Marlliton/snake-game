@@ -1,6 +1,6 @@
-import { Player } from "..";
+import { Player } from "../player";
 
-export class DetectCollisionBetweenPlayers {
+export class CollisionDetection {
   constructor(
     private players: Record<string, Player>,
     private playerMoved: Player,

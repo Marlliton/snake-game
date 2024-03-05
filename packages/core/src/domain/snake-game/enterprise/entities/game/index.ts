@@ -3,9 +3,9 @@ import { UniqueEntityId } from "@/common/entities/unique-entity-id";
 
 import { Fruit } from "../fruit";
 import { Player } from "../player";
-import { DetectCollisionBetweenPlayers } from "../player/domain-services/DetectCollisionBetweenPlayers";
 import { Coordinates } from "../value-objects/Coordinates";
 import { Screen } from "../value-objects/Screen";
+import { CollisionDetection } from "./CollisionDetection";
 
 export interface GameProps {
   players: Record<string, Player>;
@@ -107,7 +107,7 @@ export class Game extends Entity<Game, GameProps> {
     const isFruitCollided = Object.entries(this.fruits).find(([_, fruit]) =>
       fruit.checkCollision(playerMoved.playerX, playerMoved.playerY),
     );
-    const isPlayerCollided = new DetectCollisionBetweenPlayers(this.players, playerMoved).execute();
+    const isPlayerCollided = new CollisionDetection(this.players, playerMoved).execute();
 
     if (isPlayerCollided) {
       const { points, playerWithAnEmptyBody } = playerMoved.clearBodyPoints();
