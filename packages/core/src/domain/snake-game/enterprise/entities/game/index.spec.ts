@@ -15,7 +15,7 @@ let state: GameProps;
 describe("Game", () => {
   beforeEach(() => {
     player = Player.createPlayer({ x: 2, y: 4 }, new UniqueEntityId("player1"));
-    fruit = Fruit.createFruit({ fruitX: 4, fruitY: 0 }, new UniqueEntityId("fruit1"));
+    fruit = Fruit.create({ fruitX: 4, fruitY: 0 }, new UniqueEntityId("fruit1"));
     screen = Screen.createScreen({ height: 10, width: 10 });
     state = {
       players: {
@@ -27,7 +27,7 @@ describe("Game", () => {
       screen,
     };
 
-    game = Game.createGame(state);
+    game = Game.create(state);
   });
   it("should be able to create a new game", () => {
     expect(game).toBeDefined();
@@ -54,7 +54,7 @@ describe("Game", () => {
   it("should not move the player beyond the screen boundary", () => {
     // Teste movendo o jogador para fora da tela na direção X (horizontal) à direita
     const playerOnTheRightEdge = player.clone({ x: 9 });
-    const gameWithXOutOfBoundsRight = Game.createGame(state)
+    const gameWithXOutOfBoundsRight = Game.create(state)
       .addPlayer(playerOnTheRightEdge)
       .movePlayer(playerOnTheRightEdge.id, "right");
     expect(gameWithXOutOfBoundsRight.player(player.id)?.props).toEqual(
@@ -66,7 +66,7 @@ describe("Game", () => {
 
     // Teste movendo o jogador para fora da tela na direção X (horizontal) à esquerda
     const playerOnTheLeftEdge = player.clone({ x: 0 });
-    const gameWithXOutOfBoundsLeft = Game.createGame(state)
+    const gameWithXOutOfBoundsLeft = Game.create(state)
       .addPlayer(playerOnTheLeftEdge)
       .movePlayer(playerOnTheLeftEdge.id, "left");
     expect(gameWithXOutOfBoundsLeft.player(player.id)?.props).toEqual(
@@ -78,7 +78,7 @@ describe("Game", () => {
 
     // Teste movendo o jogador para fora da tela na direção Y (vertical) para baixo
     const playerOnTheBottomEdge = player.clone({ y: 9 });
-    const gameWithYOutOfBoundsDown = Game.createGame(state)
+    const gameWithYOutOfBoundsDown = Game.create(state)
       .addPlayer(playerOnTheBottomEdge)
       .movePlayer(playerOnTheBottomEdge.id, "down");
     expect(gameWithYOutOfBoundsDown.player(player.id)?.props).toEqual(
@@ -90,7 +90,7 @@ describe("Game", () => {
 
     // Teste movendo o jogador para fora da tela na direção Y (vertical) para cima
     const playerOnTheTopEdge = player.clone({ y: 0 });
-    const gameWithYOutOfBoundsUp = Game.createGame(state)
+    const gameWithYOutOfBoundsUp = Game.create(state)
       .addPlayer(playerOnTheTopEdge)
       .movePlayer(playerOnTheTopEdge.id, "up");
     expect(gameWithYOutOfBoundsUp.player(player.id)?.props).toEqual(
@@ -103,7 +103,7 @@ describe("Game", () => {
 
   it("should not be able to move a player with a wrong command", () => {
     const playerOnTheTopEdge = player.clone({ x: 0, y: 0 });
-    const gameState = Game.createGame(state)
+    const gameState = Game.create(state)
       .addPlayer(playerOnTheTopEdge)
       .movePlayer(playerOnTheTopEdge.id, "wrong");
 
@@ -126,7 +126,7 @@ describe("Game", () => {
 
   it("should be able to remove a player", () => {
     const secondPlayer = Player.createPlayer({ x: 0, y: 0 });
-    const gameWithTwoPlayers = Game.createGame(state).addPlayer(secondPlayer);
+    const gameWithTwoPlayers = Game.create(state).addPlayer(secondPlayer);
     expect(Object.keys(gameWithTwoPlayers.players)).toHaveLength(2);
 
     const gameWitOnlyOnePlayer = gameWithTwoPlayers.removePlayer(player.id);
@@ -138,14 +138,14 @@ describe("Game", () => {
   });
 
   it("should be able to add a fruit", () => {
-    const secondFruit = Fruit.createFruit({ fruitX: 2, fruitY: 9 });
+    const secondFruit = Fruit.create({ fruitX: 2, fruitY: 9 });
     const gameWithFruit = game.addFruit(secondFruit);
     expect(gameWithFruit.fruits[secondFruit.id.value]).toEqual(secondFruit);
   });
 
   it("should not be possible to add a fruit to an already occupied coordinate", () => {
-    const fruit2 = Fruit.createFruit({ fruitX: 2, fruitY: 4 });
-    const fruit3 = Fruit.createFruit({ fruitX: 2, fruitY: 4 });
+    const fruit2 = Fruit.create({ fruitX: 2, fruitY: 4 });
+    const fruit3 = Fruit.create({ fruitX: 2, fruitY: 4 });
     const newGame = game.addFruit(fruit2).addFruit(fruit3);
 
     const fruits = Object.entries(newGame.fruits).filter(
@@ -155,8 +155,8 @@ describe("Game", () => {
   });
 
   it("should be able to detect player and fruit collision", () => {
-    const fruit = Fruit.createFruit({ fruitX: 9, fruitY: 9 });
-    const gameWithInitialState = Game.createGame(state)
+    const fruit = Fruit.create({ fruitX: 9, fruitY: 9 });
+    const gameWithInitialState = Game.create(state)
       .addPlayer(player.clone({ x: 9, y: 8 }))
       .addFruit(fruit);
     expect(Object.keys(gameWithInitialState.fruits)).toHaveLength(2);
@@ -168,7 +168,7 @@ describe("Game", () => {
   });
 
   it("is should increase the player body when there is a collision with fruit", () => {
-    const fruit = Fruit.createFruit({ fruitX: 9, fruitY: 9 });
+    const fruit = Fruit.create({ fruitX: 9, fruitY: 9 });
     const gameWithCollisionFruit = game
       .addPlayer(player.clone({ x: 9, y: 8 }))
       .addFruit(fruit)
@@ -182,9 +182,9 @@ describe("Game", () => {
       }),
     );
 
-    const newFruit1 = Fruit.createFruit({ fruitX: 6, fruitY: 8 });
-    const newFruit2 = Fruit.createFruit({ fruitX: 7, fruitY: 8 });
-    const newFruit3 = Fruit.createFruit({ fruitX: 8, fruitY: 8 });
+    const newFruit1 = Fruit.create({ fruitX: 6, fruitY: 8 });
+    const newFruit2 = Fruit.create({ fruitX: 7, fruitY: 8 });
+    const newFruit3 = Fruit.create({ fruitX: 8, fruitY: 8 });
     const p = player.clone({ x: 5, y: 8 });
     const gameWithTwoCollisionFruits = game
       .addPlayer(p)

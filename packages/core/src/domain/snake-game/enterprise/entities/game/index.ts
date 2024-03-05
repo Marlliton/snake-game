@@ -134,7 +134,7 @@ export class Game extends Entity<Game, GameProps> {
   private addFruitsFromPoints(points: { x: number; y: number }[]) {
     const fruits: Record<string, Fruit> = points.reduce(
       (fruits, currentPoint) => {
-        const fruit = Fruit.createFruit({ fruitX: currentPoint.x, fruitY: currentPoint.y });
+        const fruit = Fruit.create({ fruitX: currentPoint.x, fruitY: currentPoint.y });
         fruits[fruit.id.value] = fruit;
         return fruits;
       },
@@ -144,7 +144,7 @@ export class Game extends Entity<Game, GameProps> {
     return fruits;
   }
 
-  static createGame(props: GameProps): Game {
+  static create(props: GameProps): Game {
     const game = new Game({
       ...props,
     });
