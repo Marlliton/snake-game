@@ -14,7 +14,7 @@ let game: Game;
 let state: GameProps;
 describe("Game", () => {
   beforeEach(() => {
-    player = Player.createPlayer({ x: 2, y: 4 }, new UniqueEntityId("player1"));
+    player = Player.create({ x: 2, y: 4 }, new UniqueEntityId("player1"));
     fruit = Fruit.create({ fruitX: 4, fruitY: 0 }, new UniqueEntityId("fruit1"));
     screen = Screen.createScreen({ height: 10, width: 10 });
     state = {
@@ -118,14 +118,14 @@ describe("Game", () => {
   it("should be able to add a player", () => {
     expect(Object.keys(game.players)).toHaveLength(1);
 
-    const anotherPlayer = Player.createPlayer({ x: 0, y: 0 });
+    const anotherPlayer = Player.create({ x: 0, y: 0 });
     const gameWithOneMorePlayer = game.addPlayer(anotherPlayer);
     expect(Object.keys(gameWithOneMorePlayer)).toHaveLength(2);
     expect(gameWithOneMorePlayer.player(anotherPlayer.id)!.id).toEqual(anotherPlayer.id);
   });
 
   it("should be able to remove a player", () => {
-    const secondPlayer = Player.createPlayer({ x: 0, y: 0 });
+    const secondPlayer = Player.create({ x: 0, y: 0 });
     const gameWithTwoPlayers = Game.create(state).addPlayer(secondPlayer);
     expect(Object.keys(gameWithTwoPlayers.players)).toHaveLength(2);
 
@@ -224,7 +224,7 @@ describe("Game", () => {
         { x: 3, y: 2 },
       ],
     });
-    const player2 = Player.createPlayer(
+    const player2 = Player.create(
       {
         x: 5,
         y: 5,
@@ -251,7 +251,7 @@ describe("Game", () => {
         { x: 3, y: 2 },
       ],
     });
-    const player2 = Player.createPlayer(
+    const player2 = Player.create(
       {
         x: 5,
         y: 5,

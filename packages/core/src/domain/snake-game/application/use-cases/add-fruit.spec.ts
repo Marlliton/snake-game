@@ -1,8 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { Fruit } from "../../enterprise/entities/fruit";
 import { Game } from "../../enterprise/entities/game";
-import { Player } from "../../enterprise/entities/player";
 import { Screen } from "../../enterprise/entities/value-objects/Screen";
 import { AddFruitUseCase } from "./add-fruit";
 

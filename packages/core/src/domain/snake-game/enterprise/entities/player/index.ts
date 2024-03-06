@@ -133,7 +133,7 @@ export class Player extends Entity<Player, PlayerProps> {
     return player.clone({ x: finalX, y: finalY, body: newBodyCoordinates });
   }
 
-  static createPlayer(props: Optional<PlayerProps, "lastMovement" | "body">, id?: UniqueEntityId) {
+  static create(props: Optional<PlayerProps, "lastMovement" | "body">, id?: UniqueEntityId) {
     const player = new Player(
       {
         ...props,

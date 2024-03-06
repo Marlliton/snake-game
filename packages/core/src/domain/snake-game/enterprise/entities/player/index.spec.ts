@@ -8,7 +8,7 @@ let player: Player;
 describe("Player", () => {
   beforeEach(() => {
     screen = Screen.createScreen({ height: 10, width: 10 });
-    player = Player.createPlayer({
+    player = Player.create({
       x: 5,
       y: 5,
       body: [

@@ -24,10 +24,10 @@ class Right<L, R> {
   }
 }
 
-export const left = <L, R>(value: L): Left<L, R> => {
+export const left = <L, R>(value: L): Either<L, R> => {
   return new Left(value);
 };
 
-export const right = <L, R>(value: R): Right<L, R> => {
+export const right = <L, R>(value: R): Either<L, R> => {
   return new Right(value);
 };
