@@ -15,7 +15,7 @@ describe("Add Player", () => {
       screen: Screen.createScreen({ height: 10, width: 10 }),
     });
   });
-  it("should be able add get a player", () => {
+  it("should be able add a player", () => {
     const result = sut.execute({ game });
 
     expect(result.isRight()).toBe(true);
