@@ -22,6 +22,6 @@ describe("Remove Player", () => {
     const result = sut.execute({ game, playerId: player.id });
 
     expect(result.isRight()).toBe(true);
-    expect(Object.values(result.value!.game.players)).toHaveLength(0);
+    expect(Object.values((result.value as any).game.players)).toHaveLength(0);
   });
 });
