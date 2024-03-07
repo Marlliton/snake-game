@@ -9,7 +9,7 @@ import { Screen } from "../../enterprise/entities/value-objects/Screen";
 import { GetPlayerUseCase } from "./get-player";
 
 let sut: GetPlayerUseCase;
-describe("Add Fruit", () => {
+describe("Get Player", () => {
   beforeEach(() => {
     sut = new GetPlayerUseCase();
   });
