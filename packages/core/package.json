@@ -2,14 +2,9 @@
   "name": "@snake/core",
   "version": "1.0.0",
   "description": "",
-  "typings": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "exports": {
-    ".": "./dist"
-  },
-  "main": "./dist/index.js",
+  "typings": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "scripts": {
     "build": "rm -rf ./dist && pnpm exec tsc -b tsconfig.build.json",
     "dev": "pnpm exec tsc -b tsconfig.build.json --watch",

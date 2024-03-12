@@ -1,2 +1,5 @@
-export * as entities from "./domain/snake-game/enterprise/entities";
-export * as useCases from "./domain/snake-game/application/use-cases";
+import { Fruit, Game, Player, Screen } from "./domain/snake-game/enterprise/entities";
+import type { GameProps, ScreenProps } from "./domain/snake-game/enterprise/entities";
+
+export { Fruit, Game, Player, Screen };
+export type { GameProps, ScreenProps };
