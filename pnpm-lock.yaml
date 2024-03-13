@@ -132,9 +132,6 @@ importers:
       '@snake/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      clsx:
-        specifier: ^2.1.0
-        version: 2.1.0
       next:
         specifier: ^14.0.3
         version: 14.1.0(react-dom@18.2.0)(react@18.2.0)
@@ -147,9 +144,6 @@ importers:
       socket.io-client:
         specifier: ^4.7.4
         version: 4.7.4
-      tailwind-merge:
-        specifier: ^2.2.1
-        version: 2.2.1
     devDependencies:
       '@next/eslint-plugin-next':
         specifier: ^14.0.2
@@ -266,6 +260,13 @@ importers:
   packages/typescript-config: {}
 
   packages/ui:
+    dependencies:
+      clsx:
+        specifier: ^2.1.0
+        version: 2.1.0
+      tailwind-merge:
+        specifier: ^2.2.1
+        version: 2.2.1
     devDependencies:
       '@snake/eslint-config':
         specifier: workspace:*
@@ -294,6 +295,9 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
+      tsup:
+        specifier: ^8.0.2
+        version: 8.0.2(typescript@5.3.3)
       typescript:
         specifier: ^5.2.2
         version: 5.3.3

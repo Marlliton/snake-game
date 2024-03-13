@@ -6,7 +6,7 @@ interface ContainerProps {
   className?: string;
 }
 
-export default function Container({ children, className, bigPadding }: ContainerProps) {
+export function Container({ children, className, bigPadding }: ContainerProps) {
   return (
     <div
       className={mergeClasseNames(

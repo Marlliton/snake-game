@@ -7,7 +7,7 @@ interface FlexProps extends ComponentProps<"div"> {
   row?: boolean;
 }
 
-export default function Flex({ children, className, col, row, ...rest }: FlexProps) {
+export function Flex({ children, className, col, row, ...rest }: FlexProps) {
   const flexDirection = col ? "col" : row ? "row" : "row";
   return (
     <div

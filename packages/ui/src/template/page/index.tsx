@@ -5,6 +5,6 @@ interface PageProps {
   className?: string;
 }
 
-export default function Page({ children, className }: PageProps) {
+export function Page({ children, className }: PageProps) {
   return <div className={mergeClasseNames("w-full", className)}>{children}</div>;
 }

@@ -5,7 +5,7 @@ interface WrapFullScreenProps {
   className?: string;
 }
 
-export default function WrapFullScreen({ children, className }: WrapFullScreenProps) {
+export function WrapFullScreen({ children, className }: WrapFullScreenProps) {
   return (
     <div className={mergeClasseNames("w-full h-screen relative overflow-hidden", className)}>
       {children}

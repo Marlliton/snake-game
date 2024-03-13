@@ -1,5 +1,5 @@
 import { mergeClasseNames } from "@/util/merge-class-names";
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 
 interface GridProps extends ComponentProps<"div"> {
   children: React.ReactNode;
@@ -9,7 +9,7 @@ interface GridProps extends ComponentProps<"div"> {
   numRows?: number;
 }
 
-export default function Grid({
+export function Grid({
   children,
   className,
   numCols = 1,
