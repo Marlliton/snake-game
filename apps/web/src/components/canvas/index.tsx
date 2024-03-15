@@ -4,9 +4,9 @@ import { useEffect, useRef } from "react";
 
 export function Canvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const scale = 10;
-  const rows = 40;
-  const cols = 40;
+  const scale = 20;
+  const rows = 60;
+  const cols = 60;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -31,7 +31,7 @@ export function Canvas() {
       }
 
       ctx.fillStyle = "red";
-      ctx.fillRect(0 * scale, 0 * scale, scale, scale);
+      ctx.fillRect(29 * scale, 0 * scale, scale, scale);
     }
   }, []);
   return (
@@ -39,8 +39,8 @@ export function Canvas() {
       <canvas
         className="no-blur"
         ref={canvasRef}
-        height={400}
-        width={400}
+        height={600}
+        width={600}
         style={{ border: "solid 1px #969191" }}
       />
     </Container>
