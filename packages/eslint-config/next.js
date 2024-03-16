@@ -8,8 +8,9 @@ module.exports = {
     "standard",
     "prettier",
     "plugin:@typescript-eslint/recommended",
-    'plugin:prettier/recommended',
+    "plugin:prettier/recommended",
     "eslint-config-turbo",
+    "plugin:react-hooks/recommended",
   ],
   globals: {
     React: true,
@@ -36,20 +37,29 @@ module.exports = {
     {
       files: ["*.js?(x)", "*.ts?(x)"],
       rules: {
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
         indent: ["warn", 2],
         "linebreak-style": ["error", "unix"],
         quotes: ["warn", "double"],
         semi: ["warn", "always"],
         "object-curly-spacing": ["error", "always"],
-        "no-unused-vars": "warn",
+        "no-unused-vars": "off",
         "@typescript-eslint/no-explicit-any": "warn",
-        "@typescript-eslint/no-unused-vars": "warn", 
+        "@typescript-eslint/no-unused-vars": [
+          "warn", // or "error"
+          {
+            argsIgnorePattern: "^_",
+            varsIgnorePattern: "^_",
+            caughtErrorsIgnorePattern: "^_",
+          },
+        ],
         "import/no-duplicates": "off",
         "prettier/prettier": [
           "error",
           {
-            "printWidth": 100
-          }
+            printWidth: 100,
+          },
         ],
       },
     },

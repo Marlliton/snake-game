@@ -1,36 +1,43 @@
 "use client";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useRef } from "react";
 
+type ObserverFuc = (key: string) => void;
 type Observer = {
-  [type: string]: () => void;
+  identifier: string;
+  action: ObserverFuc;
 };
-
-declare module "@/contexts/keyboard-context" {
-  interface KeyboardContextProps {
-    registerObserver(observer: Observer): void;
-  }
+interface KeyboardContextProps {
+  registerObserver(observer: Observer): void;
 }
 
 export const KeyboardContext = createContext({} as KeyboardContextProps);
 
 export function KeyboardContextProvider({ children }: { children: React.ReactNode }) {
-  const [observers, serObservers] = useState<Record<string, Observer>>({});
+  const observersRefs = useRef<Observer[]>([]);
 
-  // useEffect(() => {
-  //   const notify = (key: KeyboardEvent) => {
-  //     for (const observer of observers) {
-  //       observer(key);
-  //     }
-  //   };
-
-  //   if (!document) return;
-  //   document.addEventListener("keydown", notify);
-  //   console.log("notificando");
-  //   return () => document.removeEventListener("keydown", notify);
-  // }, [observers]);
+  useEffect(() => {
+    if (!observersRefs.current) return;
+    function notify(event: KeyboardEvent) {
+      const observers = observersRefs.current;
+      for (const observer of observers) {
+        observer.action(event.key.replace("Arrow", "").toLowerCase());
+      }
+    }
+    if (!document) return;
+    document.addEventListener("keydown", notify);
+    return () => document.removeEventListener("keydown", notify);
+  }, []);
 
   const registerObserver = (observer: Observer) => {
-    console.log("🚀 ~ registerObserver ~ observer:", observer);
+    const observerIndex = observersRefs.current.findIndex(
+      (ob) => ob.identifier === observer.identifier,
+    );
+
+    if (observerIndex > -1) {
+      observersRefs.current[observerIndex] = observer;
+    } else {
+      observersRefs.current.push(observer);
+    }
   };
 
   return (

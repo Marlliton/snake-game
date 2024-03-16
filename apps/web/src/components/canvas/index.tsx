@@ -1,8 +1,22 @@
 "use client";
+import { GameContext } from "@/contexts/game-context";
+import { KeyboardContext } from "@/contexts/keyboard-context";
 import { Container } from "@snake/ui";
-import { useEffect, useRef } from "react";
+import { use, useEffect, useRef } from "react";
+import { emerald } from "tailwindcss/colors";
 
 export function Canvas() {
+  const { registerObserver } = use(KeyboardContext);
+  const { player, movePlayer, fruits } = use(GameContext);
+
+  useEffect(() => {
+    registerObserver({
+      action: movePlayer,
+      identifier: "move",
+    });
+  }, [movePlayer, registerObserver]);
+
+  const fruitsList = fruits();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const scale = 20;
   const rows = 60;
@@ -30,14 +44,25 @@ export function Canvas() {
         ctx.stroke();
       }
 
+      for (let i = 0; i < fruitsList.length; i++) {
+        ctx.fillStyle = emerald[500];
+        ctx.fillRect(fruitsList[i]!.fruitX * scale, fruitsList[i]!.fruitY * scale, scale, scale);
+      }
+
+      const { playerX, playerY, body } = player;
       ctx.fillStyle = "red";
-      ctx.fillRect(29 * scale, 0 * scale, scale, scale);
+      ctx.fillRect(playerX * scale, playerY * scale, scale, scale);
+      for (let i = 0; i < body.length; i++) {
+        if (!body.length) return;
+        console.log("renderizando corpo");
+        ctx.fillRect(body[i]!.x * scale, body[i]!.y * scale, scale, scale);
+      }
     }
-  }, []);
+  }, [fruitsList, player]);
   return (
     <Container>
       <canvas
-        className="no-blur"
+        className="no-blur bg-"
         ref={canvasRef}
         height={600}
         width={600}

@@ -1,3 +1,5 @@
+import { UniqueEntityId } from "@/common/entities/unique-entity-id";
+
 import {
   AddFruitUseCase,
   AddPlayerUseCasse,
@@ -20,5 +22,6 @@ export {
   MovePlayerUseCasse,
   RemoveFruitUseCase,
   RemovePlayerUseCasse,
+  UniqueEntityId,
 };
 export type { GameProps, ScreenProps };

@@ -1,9 +1,9 @@
-import { randomUUID } from "node:crypto";
+import { v4 as uuidv4 } from "uuid";
 
 export class UniqueEntityId {
   private _id: string;
   constructor(id?: string) {
-    this._id = id ?? randomUUID();
+    this._id = id ?? uuidv4();
   }
 
   get value() {

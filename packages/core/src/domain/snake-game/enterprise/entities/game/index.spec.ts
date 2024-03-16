@@ -186,6 +186,7 @@ describe("Game", () => {
     const newFruit2 = Fruit.create({ fruitX: 7, fruitY: 8 });
     const newFruit3 = Fruit.create({ fruitX: 8, fruitY: 8 });
     const p = player.clone({ x: 5, y: 8 });
+    console.log("🚀 ~ it ~ gameWithTwoCollisionFruits.player(player.id):", p.headCoordinates);
     const gameWithTwoCollisionFruits = game
       .addPlayer(p)
       .addFruit(newFruit1)
@@ -195,6 +196,10 @@ describe("Game", () => {
       .movePlayer(p.id, "right")
       .movePlayer(p.id, "right");
 
+    console.log(
+      "🚀 ~ it ~ gameWithTwoCollisionFruits.player(player.id):",
+      gameWithTwoCollisionFruits.player(player.id)?.headCoordinates,
+    );
     expect(gameWithTwoCollisionFruits.player(player.id)?.body).toHaveLength(3);
     expect(gameWithTwoCollisionFruits.player(player.id)?.body).toEqual(
       expect.arrayContaining([
