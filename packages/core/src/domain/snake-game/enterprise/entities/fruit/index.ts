@@ -21,9 +21,6 @@ export class Fruit extends Entity<Fruit, FruitProps> {
 
   checkCollision(x: number, y: number) {
     const isCollided = this.fruitX === x && this.fruitY === y;
-    console.log("this.fruitX:", this.fruitX, "this.fruitY:", this.fruitY);
-
-    console.log("X:", x, "Y:", y);
 
     return isCollided;
   }

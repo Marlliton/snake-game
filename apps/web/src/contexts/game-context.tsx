@@ -7,6 +7,9 @@ import { createContext, useCallback, useState } from "react";
 interface GameContextProps {
   game: Game;
   player: Player;
+  scale: number;
+  rows: number;
+  cols: number;
   movePlayer(command: string): void;
   fruits(): Fruit[];
 }
@@ -18,6 +21,10 @@ const fruit2 = Fruit.create({ fruitX: 3, fruitY: 16 });
 const fruit3 = Fruit.create({ fruitX: 9, fruitY: 23 });
 const fruit4 = Fruit.create({ fruitX: 3, fruitY: 21 });
 const player = Player.create({ x: 0, y: 0 }, new UniqueEntityId("player-1"));
+
+const SCALE = 20;
+const ROWS = 60;
+const COLS = 60;
 
 export function GameContextProvider({ children }: { children: React.ReactNode }) {
   const [game, setGame] = useState(
@@ -48,12 +55,21 @@ export function GameContextProvider({ children }: { children: React.ReactNode })
 
   const fruits = useCallback(() => {
     const fruits = Object.entries(game.fruits).map(([_, fruit]) => fruit);
-    console.log(fruits[0]?.coordinates);
     return fruits;
   }, [game.fruits]);
 
   return (
-    <GameContext.Provider value={{ game, player: game.player(player.id)!, movePlayer, fruits }}>
+    <GameContext.Provider
+      value={{
+        game,
+        cols: COLS,
+        rows: ROWS,
+        scale: SCALE,
+        player: game.player(player.id)!,
+        movePlayer,
+        fruits,
+      }}
+    >
       {children}
     </GameContext.Provider>
   );

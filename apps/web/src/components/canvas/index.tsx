@@ -1,13 +1,16 @@
 "use client";
 import { GameContext } from "@/contexts/game-context";
 import { KeyboardContext } from "@/contexts/keyboard-context";
+import { ThemeContext } from "@/contexts/theme-context";
 import { Container } from "@snake/ui";
-import { use, useEffect, useRef } from "react";
-import { emerald, amber } from "tailwindcss/colors";
+import { use, useCallback, useEffect, useLayoutEffect, useRef } from "react";
 
 export function Canvas() {
   const { registerObserver } = use(KeyboardContext);
-  const { player, movePlayer, fruits } = use(GameContext);
+  const { theme } = use(ThemeContext);
+  const { player, cols, rows, scale, movePlayer, fruits } = use(GameContext);
+  const fruitsList = fruits();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     registerObserver({
@@ -16,58 +19,62 @@ export function Canvas() {
     });
   }, [movePlayer, registerObserver]);
 
-  const fruitsList = fruits();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const scale = 20;
-  const rows = 60;
-  const cols = 60;
+  const renderBoard = useCallback(
+    (ctx: CanvasRenderingContext2D) => {
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const color = (row + col) % 2 === 0 ? theme["board-100"] : theme["board-200"];
+          ctx.fillStyle = color;
+          ctx.fillRect(row * scale, col * scale, scale, scale);
+        }
+      }
+    },
+    [cols, theme, rows, scale],
+  );
 
-  useEffect(() => {
+  const renderPlayer = useCallback(
+    (ctx: CanvasRenderingContext2D) => {
+      const { playerX, playerY, body } = player;
+      ctx.fillStyle = theme["snake-100"];
+      ctx.fillRect(playerX * scale, playerY * scale, scale, scale);
+      for (let i = 0; i < body.length; i++) {
+        ctx.fillStyle = theme["snake-200"];
+        if (!body.length) return;
+        ctx.fillRect(body[i]!.x * scale, body[i]!.y * scale, scale, scale);
+      }
+    },
+    [theme, player, scale],
+  );
+
+  const renderFruits = useCallback(
+    (ctx: CanvasRenderingContext2D) => {
+      for (let i = 0; i < fruitsList.length; i++) {
+        ctx.fillStyle = theme.fruit;
+        ctx.fillRect(fruitsList[i]!.fruitX * scale, fruitsList[i]!.fruitY * scale, scale, scale);
+      }
+    },
+    [fruitsList, theme, scale],
+  );
+
+  useLayoutEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = "#ffffff21";
-
-      for (let i = 0; i < rows; i++) {
-        ctx.beginPath();
-        ctx.moveTo(0, i * scale);
-        ctx.lineTo(canvas.width, i * scale);
-        ctx.stroke();
-      }
-
-      for (let i = 0; i < cols; i++) {
-        ctx.beginPath();
-        ctx.moveTo(i * scale, 0);
-        ctx.lineTo(i * scale, canvas.height);
-        ctx.stroke();
-      }
-
-      for (let i = 0; i < fruitsList.length; i++) {
-        ctx.fillStyle = emerald[500];
-        ctx.fillRect(fruitsList[i]!.fruitX * scale, fruitsList[i]!.fruitY * scale, scale, scale);
-      }
-
-      const { playerX, playerY, body } = player;
-      ctx.fillStyle = "red";
-      ctx.fillRect(playerX * scale, playerY * scale, scale, scale);
-      for (let i = 0; i < body.length; i++) {
-        ctx.fillStyle = "#f59e0b80";
-        if (!body.length) return;
-        console.log("renderizando corpo");
-        ctx.fillRect(body[i]!.x * scale, body[i]!.y * scale, scale, scale);
-      }
+      renderBoard(ctx);
+      renderFruits(ctx);
+      renderPlayer(ctx);
     }
-  }, [fruitsList, player]);
+  }, [renderBoard, renderFruits, renderPlayer]);
+
   return (
     <Container>
       <canvas
-        className="no-blur bg-"
+        className="no-blur border border-custom-green-700"
         ref={canvasRef}
         height={600}
         width={600}
-        style={{ border: "solid 1px #969191" }}
       />
     </Container>
   );
