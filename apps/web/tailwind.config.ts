@@ -17,14 +17,14 @@ const config: Config = {
     },
     colors: {
       ...defaultColors,
-      "custom-green-400": "#A2AB28",
-      "custom-green-500": "#36907E10",
-      "custom-green-600": "#36907E20",
-      "custom-green-700": "#36907E80",
-      "custom-green-900": "#0e130f",
+      "green-theme-fruit-100": "#A2AB28",
+      "green-theme-board-500": "#36907E10",
+      "green-theme-board-600": "#36907E20",
+      "green-theme-board-700": "#36907E80",
+      "green-theme-bg-900": "#0e130f",
 
-      "custom-red-100": "#C24328",
-      "custom-red-200": "#C2432890",
+      "green-theme-red-100": "#C24328",
+      "green-theme-red-200": "#C2432890",
     },
   },
   safelist: [

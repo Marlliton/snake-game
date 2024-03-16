@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 const GREEN_THEME = {
   fruit: "#A2AB28",
@@ -11,20 +11,48 @@ const GREEN_THEME = {
   "snake-200": "#C2432890",
 } as const;
 
-type GreenTheme = typeof GREEN_THEME;
+const PASTEL_THEME = {
+  fruit: "#DEAE62",
+  "board-100": "#B7A78D10",
+  "board-200": "#B7A78D20",
+  "board-700": "#B7A78D80",
+  bg: "#201d1b",
+  "snake-100": "#F48A5B",
+  "snake-200": "#F48A5B90",
+} as const;
+
+const VIOLET_THEME = {
+  fruit: "#D8B888",
+  "board-100": "#99697E10",
+  "board-200": "#99697E20",
+  "board-700": "#99697E80",
+  bg: "#0f070c",
+  "snake-100": "#79445E",
+  "snake-200": "#79445E90",
+} as const;
+
+const THEME_OPTIONS = { GREEN_THEME, PASTEL_THEME, VIOLET_THEME } as const;
+
+type Theme = typeof GREEN_THEME | typeof PASTEL_THEME | typeof VIOLET_THEME;
+type ThemeOptions = keyof typeof THEME_OPTIONS;
 
 interface ThemeContextProps {
-  theme: GreenTheme;
-  changeTheme(theme: any): void;
+  theme: Theme;
+  changeTheme(theme: ThemeOptions): void;
 }
 
 export const ThemeContext = createContext({} as ThemeContextProps);
 
 export function ThemeContextProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<GreenTheme>(GREEN_THEME);
+  const [theme, setTheme] = useState<Theme>(PASTEL_THEME);
 
-  function changeTheme(theme: any) {
-    setTheme(theme);
+  useEffect(() => {
+    if (!document) return;
+    document.body.style.backgroundColor = theme.bg;
+  }, [theme]);
+
+  function changeTheme(theme: ThemeOptions) {
+    setTheme(THEME_OPTIONS[theme]);
   }
 
   return <ThemeContext.Provider value={{ theme, changeTheme }}>{children}</ThemeContext.Provider>;

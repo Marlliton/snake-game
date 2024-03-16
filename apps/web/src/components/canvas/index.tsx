@@ -2,7 +2,7 @@
 import { GameContext } from "@/contexts/game-context";
 import { KeyboardContext } from "@/contexts/keyboard-context";
 import { ThemeContext } from "@/contexts/theme-context";
-import { Container } from "@snake/ui";
+import { Container, mergeClasseNames } from "@snake/ui";
 import { use, useCallback, useEffect, useLayoutEffect, useRef } from "react";
 
 export function Canvas() {
@@ -31,7 +31,6 @@ export function Canvas() {
     },
     [cols, theme, rows, scale],
   );
-
   const renderPlayer = useCallback(
     (ctx: CanvasRenderingContext2D) => {
       const { playerX, playerY, body } = player;
@@ -67,11 +66,11 @@ export function Canvas() {
       renderPlayer(ctx);
     }
   }, [renderBoard, renderFruits, renderPlayer]);
-
   return (
     <Container>
       <canvas
-        className="no-blur border border-custom-green-700"
+        className={mergeClasseNames("no-blur border")}
+        style={{ borderColor: theme["board-700"] }}
         ref={canvasRef}
         height={600}
         width={600}

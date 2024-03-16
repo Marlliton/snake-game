@@ -1,10 +1,10 @@
 import { GameContextProvider } from "@/contexts/game-context";
 import { KeyboardContextProvider } from "@/contexts/keyboard-context";
+import { ThemeContextProvider } from "@/contexts/theme-context";
 import "@snake/ui/styles.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeContextProvider } from "@/contexts/theme-context";
 
 const inter = Inter({ subsets: ["latin"] });
 

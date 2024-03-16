@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-custom-green-900 text-zinc-200;
+    @apply bg-[#201d1b] text-zinc-200;
   }
 }
 
