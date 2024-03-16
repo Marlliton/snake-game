@@ -3,7 +3,7 @@ import { GameContext } from "@/contexts/game-context";
 import { KeyboardContext } from "@/contexts/keyboard-context";
 import { Container } from "@snake/ui";
 import { use, useEffect, useRef } from "react";
-import { emerald } from "tailwindcss/colors";
+import { emerald, amber } from "tailwindcss/colors";
 
 export function Canvas() {
   const { registerObserver } = use(KeyboardContext);
@@ -53,6 +53,7 @@ export function Canvas() {
       ctx.fillStyle = "red";
       ctx.fillRect(playerX * scale, playerY * scale, scale, scale);
       for (let i = 0; i < body.length; i++) {
+        ctx.fillStyle = "#f59e0b80";
         if (!body.length) return;
         console.log("renderizando corpo");
         ctx.fillRect(body[i]!.x * scale, body[i]!.y * scale, scale, scale);

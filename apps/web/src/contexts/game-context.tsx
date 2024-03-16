@@ -1,5 +1,7 @@
 "use client";
-import { Fruit, Game, MovePlayerUseCasse, Player, Screen, UniqueEntityId } from "@snake/core";
+import { Fruit, Game, Player, Screen } from "@snake/core";
+import { MovePlayerUseCasse } from "@snake/core/use-cases";
+import { UniqueEntityId } from "@snake/core/common";
 import { createContext, useCallback, useState } from "react";
 
 interface GameContextProps {
