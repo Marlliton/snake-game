@@ -23,7 +23,7 @@ export function Canvas() {
     (ctx: CanvasRenderingContext2D) => {
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-          const color = (row + col) % 2 === 0 ? theme["board-100"] : theme["board-200"];
+          const color = (row + col) % 2 === 0 ? theme["500"] : theme["600"];
           ctx.fillStyle = color;
           ctx.fillRect(row * scale, col * scale, scale, scale);
         }
@@ -34,10 +34,10 @@ export function Canvas() {
   const renderPlayer = useCallback(
     (ctx: CanvasRenderingContext2D) => {
       const { playerX, playerY, body } = player;
-      ctx.fillStyle = theme["snake-100"];
+      ctx.fillStyle = theme["300"];
       ctx.fillRect(playerX * scale, playerY * scale, scale, scale);
       for (let i = 0; i < body.length; i++) {
-        ctx.fillStyle = theme["snake-200"];
+        ctx.fillStyle = theme["400"];
         if (!body.length) return;
         ctx.fillRect(body[i]!.x * scale, body[i]!.y * scale, scale, scale);
       }
@@ -48,7 +48,7 @@ export function Canvas() {
   const renderFruits = useCallback(
     (ctx: CanvasRenderingContext2D) => {
       for (let i = 0; i < fruitsList.length; i++) {
-        ctx.fillStyle = theme.fruit;
+        ctx.fillStyle = theme["100"];
         ctx.fillRect(fruitsList[i]!.fruitX * scale, fruitsList[i]!.fruitY * scale, scale, scale);
       }
     },
@@ -70,7 +70,7 @@ export function Canvas() {
     <Container>
       <canvas
         className={mergeClasseNames("no-blur border")}
-        style={{ borderColor: theme["board-700"] }}
+        style={{ borderColor: theme["700"] }}
         ref={canvasRef}
         height={600}
         width={600}

@@ -1,35 +1,40 @@
 "use client";
 import { createContext, useEffect, useState } from "react";
 import Cookie from "js-cookie";
+import tailwind from "../../tailwind.config";
+console.log(tailwind.theme?.colors);
 
 const GREEN_THEME = {
-  fruit: "#A2AB28",
-  "board-100": "#36907E10",
-  "board-200": "#36907E20",
-  "board-700": "#36907E80",
-  bg: "#0e130f",
-  "snake-100": "#C24328",
-  "snake-200": "#C2432890",
+  "100": "#A2AB28",
+  "200": "#36907E",
+  "300": "#C24328",
+  "400": "#C2432890",
+  "500": "#36907E10",
+  "600": "#36907E20",
+  "700": "#36907E80",
+  "900": "#0e130f",
 } as const;
 
 const PASTEL_THEME = {
-  fruit: "#DEAE62",
-  "board-100": "#B7A78D10",
-  "board-200": "#B7A78D20",
-  "board-700": "#B7A78D80",
-  bg: "#201d1b",
-  "snake-100": "#F48A5B",
-  "snake-200": "#F48A5B90",
+  "100": "#DEAE62",
+  "200": "#B7A78D",
+  "300": "#F48A5B",
+  "400": "#F48A5B90",
+  "500": "#B7A78D10",
+  "600": "#B7A78D20",
+  "700": "#B7A78D80",
+  "900": "#201d1b",
 } as const;
 
 const VIOLET_THEME = {
-  fruit: "#D8B888",
-  "board-100": "#99697E10",
-  "board-200": "#99697E20",
-  "board-700": "#99697E80",
-  bg: "#0f070c",
-  "snake-100": "#79445E",
-  "snake-200": "#79445E90",
+  "100": "#D8B888",
+  "200": "#99697E",
+  "300": "#79445E",
+  "400": "#79445E90",
+  "500": "#99697E10",
+  "600": "#99697E20",
+  "700": "#99697E80",
+  "900": "#0f070c",
 } as const;
 
 export const THEME_OPTIONS = { GREEN_THEME, PASTEL_THEME, VIOLET_THEME } as const;
@@ -51,11 +56,12 @@ export function ThemeContextProvider({ children }: { children: React.ReactNode }
     if (!document) return;
     const selectedTheme = Cookie.get("snake-theme") as ThemeOptions;
 
-    if (selectedTheme) {
+    if (THEME_OPTIONS[selectedTheme]) {
+      console.log("🚀 ~ useEffect ~ selectedTheme:", selectedTheme);
       changeTheme(selectedTheme);
     }
 
-    document.body.style.backgroundColor = theme.bg;
+    document.body.style.backgroundColor = theme[900];
   }, [theme]);
 
   function changeTheme(theme: ThemeOptions) {

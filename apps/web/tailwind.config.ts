@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
+import defaultColors from "tailwindcss/colors";
 
 const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
@@ -36,6 +37,17 @@ const config: Config = {
         20: "repeat(20, minmax(0, 1fr))",
         22: "repeat(22, minmax(0, 1fr))",
         24: "repeat(24, minmax(0, 1fr))",
+      },
+    },
+    colors: {
+      green: {
+        "theme-100": "#A2AB28",
+        "theme-200": "#36907E",
+        "theme-900": "#0e130f",
+        "theme-red-100": "#C24328",
+      },
+      zinc: {
+        ...defaultColors.zinc,
       },
     },
   },

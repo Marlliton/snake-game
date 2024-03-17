@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-black text-zinc-200;
+    @apply bg-green-theme-900 text-zinc-200;
   }
 }
 
