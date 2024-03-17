@@ -4,7 +4,7 @@ import { ThemeContextProvider } from "@/contexts/theme-context";
 import "@snake/ui/styles.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "../styles/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }): JSX.Element {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`bg-900 ${inter.className}`}>
         <ThemeContextProvider>
           <KeyboardContextProvider>
             <GameContextProvider>{children}</GameContextProvider>

@@ -1,0 +1,10 @@
+html[data-theme="GREEN_THEME"] {
+  --color-100: #A2AB28;
+  --color-200: #36907E;
+  --color-300: #C24328;
+  --color-400: #C2432890;
+  --color-500: #36907E10;
+  --color-600: #36907E20;
+  --color-700: #36907E80;
+  --color-900: #0e130f;
+}

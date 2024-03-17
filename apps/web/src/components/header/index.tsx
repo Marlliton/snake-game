@@ -17,7 +17,7 @@ export function Header() {
               changeTheme("GREEN_THEME");
               setShow(false);
             }}
-            style={{ backgroundColor: THEME_OPTIONS.GREEN_THEME["700"] }}
+            style={{ backgroundColor: THEME_OPTIONS.GREEN_THEME["200"] }}
             className={mergeClasseNames(
               "rounded-md w-8 h-8",
               { "animate-show": show },
@@ -31,7 +31,7 @@ export function Header() {
               changeTheme("PASTEL_THEME");
               setShow(false);
             }}
-            style={{ backgroundColor: THEME_OPTIONS.PASTEL_THEME["700"] }}
+            style={{ backgroundColor: THEME_OPTIONS.PASTEL_THEME["200"] }}
             className={mergeClasseNames(
               "rounded-md w-8 h-8",
               {
@@ -47,7 +47,7 @@ export function Header() {
               changeTheme("VIOLET_THEME");
               setShow(false);
             }}
-            style={{ backgroundColor: THEME_OPTIONS.VIOLET_THEME["700"] }}
+            style={{ backgroundColor: THEME_OPTIONS.VIOLET_THEME["200"] }}
             className={mergeClasseNames(
               "rounded-md w-8 h-8",
               {
@@ -61,7 +61,7 @@ export function Header() {
           onClick={() => setShow(!show)}
           className={mergeClasseNames("relative flex rounded-md")}
         >
-          <Palette style={{ color: theme["200"] }} size={32} />
+          <Palette className="text-200" size={32} />
         </button>
       </div>
     </header>

@@ -1,8 +1,6 @@
 "use client";
 import { createContext, useEffect, useState } from "react";
 import Cookie from "js-cookie";
-import tailwind from "../../tailwind.config";
-console.log(tailwind.theme?.colors);
 
 const GREEN_THEME = {
   "100": "#A2AB28",
@@ -55,17 +53,14 @@ export function ThemeContextProvider({ children }: { children: React.ReactNode }
   useEffect(() => {
     if (!document) return;
     const selectedTheme = Cookie.get("snake-theme") as ThemeOptions;
-
     if (THEME_OPTIONS[selectedTheme]) {
-      console.log("🚀 ~ useEffect ~ selectedTheme:", selectedTheme);
       changeTheme(selectedTheme);
     }
-
-    document.body.style.backgroundColor = theme[900];
-  }, [theme]);
+  }, []);
 
   function changeTheme(theme: ThemeOptions) {
     Cookie.set("snake-theme", theme);
+    document.querySelector("html")?.setAttribute("data-theme", theme);
     setTheme(THEME_OPTIONS[theme]);
   }
 

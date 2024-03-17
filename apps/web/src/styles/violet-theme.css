@@ -1,0 +1,10 @@
+html[data-theme="VIOLET_THEME"] {
+  --color-100: #D8B888;
+  --color-200: #99697E;
+  --color-300: #79445E;
+  --color-400: #79445E90;
+  --color-500: #99697E10;
+  --color-600: #99697E20;
+  --color-700: #99697E80;
+  --color-900: #0f070c;
+}

@@ -1,0 +1,10 @@
+html[data-theme="PASTEL_THEME"] {
+  --color-100: #DEAE62;
+  --color-200: #B7A78D;
+  --color-300: #F48A5B;
+  --color-400: #F48A5B90;
+  --color-500: #B7A78D10;
+  --color-600: #B7A78D20;
+  --color-700: #B7A78D80;
+  --color-900: #201d1b;
+}

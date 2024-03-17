@@ -40,12 +40,14 @@ const config: Config = {
       },
     },
     colors: {
-      green: {
-        "theme-100": "#A2AB28",
-        "theme-200": "#36907E",
-        "theme-900": "#0e130f",
-        "theme-red-100": "#C24328",
-      },
+      "100": "var(--color-100)",
+      "200": "var(--color-200)",
+      "300": "var(--color-300)",
+      "400": "var(--color-400)",
+      "500": "var(--color-500)",
+      "600": "var(--color-600)",
+      "700": "var(--color-700)",
+      "900": "var(--color-900)",
       zinc: {
         ...defaultColors.zinc,
       },
