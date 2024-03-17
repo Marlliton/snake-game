@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useEffect, useState } from "react";
+import Cookie from "js-cookie";
 
 const GREEN_THEME = {
   fruit: "#A2AB28",
@@ -31,7 +32,7 @@ const VIOLET_THEME = {
   "snake-200": "#79445E90",
 } as const;
 
-const THEME_OPTIONS = { GREEN_THEME, PASTEL_THEME, VIOLET_THEME } as const;
+export const THEME_OPTIONS = { GREEN_THEME, PASTEL_THEME, VIOLET_THEME } as const;
 
 type Theme = typeof GREEN_THEME | typeof PASTEL_THEME | typeof VIOLET_THEME;
 type ThemeOptions = keyof typeof THEME_OPTIONS;
@@ -44,14 +45,21 @@ interface ThemeContextProps {
 export const ThemeContext = createContext({} as ThemeContextProps);
 
 export function ThemeContextProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(PASTEL_THEME);
+  const [theme, setTheme] = useState<Theme>(GREEN_THEME);
 
   useEffect(() => {
     if (!document) return;
+    const selectedTheme = Cookie.get("snake-theme") as ThemeOptions;
+
+    if (selectedTheme) {
+      changeTheme(selectedTheme);
+    }
+
     document.body.style.backgroundColor = theme.bg;
   }, [theme]);
 
   function changeTheme(theme: ThemeOptions) {
+    Cookie.set("snake-theme", theme);
     setTheme(THEME_OPTIONS[theme]);
   }
 

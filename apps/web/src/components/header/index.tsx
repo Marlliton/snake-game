@@ -1,27 +1,68 @@
 "use client";
+import { ThemeContext, THEME_OPTIONS } from "@/contexts/theme-context";
+import { Palette } from "@phosphor-icons/react";
 import { Flex, mergeClasseNames } from "@snake/ui";
-import { useState } from "react";
+import { use, useState } from "react";
 
 export function Header() {
+  const { theme, changeTheme } = use(ThemeContext);
   const [show, setShow] = useState(false);
   return (
-    <header className={mergeClasseNames("flex justify-between mx-5")}>
+    <header className={mergeClasseNames("flex justify-between mx-5 py-2 overflow-hidden bg")}>
       <div>Snake.game</div>
-      <div
-        className={mergeClasseNames("relative bg-blue-400 w-10 h-10 rounded-md", {
-          "w-auto": show,
-        })}
-        onClick={() => setShow(true)}
-      >
-        <Flex
-          className={mergeClasseNames("overflow-hidden transition-all duration-[3000ms] w-0", {
-            "w-auto": show,
-          })}
-        >
-          <span>Gree</span>
-          <span>Pastel</span>
-          <span>Violet</span>
+      <div className={mergeClasseNames("flex gap-2")}>
+        <Flex>
+          <button
+            onClick={() => {
+              changeTheme("GREEN_THEME");
+              setShow(false);
+            }}
+            style={{ backgroundColor: THEME_OPTIONS.GREEN_THEME["board-700"] }}
+            className={mergeClasseNames(
+              "rounded-md w-8 h-8",
+              { "animate-show": show },
+              {
+                "animate-[hidden_.8s_ease-in-out_forwards]": !show,
+              },
+            )}
+          ></button>
+          <button
+            onClick={() => {
+              changeTheme("PASTEL_THEME");
+              setShow(false);
+            }}
+            style={{ backgroundColor: THEME_OPTIONS.PASTEL_THEME["board-700"] }}
+            className={mergeClasseNames(
+              "rounded-md w-8 h-8",
+              {
+                "animate-[show_.6s_ease-in-out]": show,
+              },
+              {
+                "animate-[hidden_.6s_ease-in-out_forwards]": !show,
+              },
+            )}
+          ></button>
+          <button
+            onClick={() => {
+              changeTheme("VIOLET_THEME");
+              setShow(false);
+            }}
+            style={{ backgroundColor: THEME_OPTIONS.VIOLET_THEME["board-700"] }}
+            className={mergeClasseNames(
+              "rounded-md w-8 h-8",
+              {
+                "animate-[show_.8s_ease-in-out]": show,
+              },
+              { "animate-hidden": !show },
+            )}
+          ></button>
         </Flex>
+        <button
+          onClick={() => setShow(!show)}
+          className={mergeClasseNames("relative flex rounded-md")}
+        >
+          <Palette style={{ color: theme["snake-100"] }} size={32} />
+        </button>
       </div>
     </header>
   );
