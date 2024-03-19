@@ -3,13 +3,14 @@ import { GameContext } from "@/contexts/game-context";
 import { KeyboardContext } from "@/contexts/keyboard-context";
 import { ThemeContext } from "@/contexts/theme-context";
 import { Container, mergeClasseNames } from "@snake/ui";
-import { use, useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { use, useCallback, useEffect, useRef } from "react";
 
 export function Canvas() {
   const { registerObserver } = use(KeyboardContext);
   const { theme } = use(ThemeContext);
-  const { player, cols, rows, scale, movePlayer, fruits } = use(GameContext);
+  const { players, cols, rows, scale, movePlayer, fruits } = use(GameContext);
   const fruitsList = fruits();
+  const playersList = players();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -31,18 +32,22 @@ export function Canvas() {
     },
     [cols, theme, rows, scale],
   );
-  const renderPlayer = useCallback(
+  const renderPlayers = useCallback(
     (ctx: CanvasRenderingContext2D) => {
-      const { playerX, playerY, body } = player;
-      ctx.fillStyle = theme["300"];
-      ctx.fillRect(playerX * scale, playerY * scale, scale, scale);
-      for (let i = 0; i < body.length; i++) {
-        ctx.fillStyle = theme["400"];
-        if (!body.length) return;
-        ctx.fillRect(body[i]!.x * scale, body[i]!.y * scale, scale, scale);
-      }
+      playersList.forEach((player) => {
+        const { playerX, playerY, body } = player;
+
+        ctx.fillStyle = player.id.value === "player-1" ? theme["300"] : theme["350"];
+        ctx.fillRect(playerX * scale, playerY * scale, scale, scale);
+
+        for (let i = 0; i < body.length; i++) {
+          ctx.fillStyle = player.id.value === "player-1" ? theme["400"] : theme["450"];
+          if (!body.length) return;
+          ctx.fillRect(body[i]!.x * scale, body[i]!.y * scale, scale, scale);
+        }
+      });
     },
-    [theme, player, scale],
+    [theme, playersList, scale],
   );
 
   const renderFruits = useCallback(
@@ -55,17 +60,25 @@ export function Canvas() {
     [fruitsList, theme, scale],
   );
 
-  useLayoutEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      renderBoard(ctx);
-      renderFruits(ctx);
-      renderPlayer(ctx);
-    }
-  }, [renderBoard, renderFruits, renderPlayer]);
+  const renderGame = useCallback(
+    (canvas: HTMLCanvasElement | null) => {
+      if (canvas) {
+        console.log("render");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        renderBoard(ctx);
+        renderFruits(ctx);
+        renderPlayers(ctx);
+      }
+    },
+    [renderBoard, renderFruits, renderPlayers],
+  );
+
+  useEffect(() => {
+    renderGame(canvasRef.current);
+  }, [renderGame]);
+
   return (
     <Container>
       <canvas
