@@ -44,6 +44,9 @@ importers:
       '@snake/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@snake/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.14

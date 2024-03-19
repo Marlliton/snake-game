@@ -25,6 +25,14 @@ export class Fruit extends Entity<Fruit, FruitProps> {
     return isCollided;
   }
 
+  state() {
+    return {
+      fruitY: this.fruitY,
+      fruitX: this.fruitX,
+      id: this.id.value,
+    };
+  }
+
   static create(props: FruitProps, id?: UniqueEntityId) {
     const fruit = new Fruit(props, id);
 

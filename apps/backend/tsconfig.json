@@ -1,6 +1,6 @@
 {
+  "extends": "@snake/typescript-config/base.json",
   "compilerOptions": {
-    "module": "commonjs",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,

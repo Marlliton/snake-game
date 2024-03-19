@@ -37,6 +37,13 @@ export class Screen {
     };
   }
 
+  state() {
+    return {
+      width: this.width,
+      height: this.height,
+    };
+  }
+
   static createScreen(props: ScreenProps): Screen {
     return new Screen(props);
   }

@@ -4,7 +4,7 @@ import { Optional } from "@/common/types/Optional";
 
 import { Screen } from "../value-objects/Screen";
 
-type Body = {
+export type Body = {
   x: number;
   y: number;
 };
@@ -131,6 +131,15 @@ export class Player extends Entity<Player, PlayerProps> {
     });
 
     return player.clone({ x: finalX, y: finalY, body: newBodyCoordinates });
+  }
+
+  state() {
+    return {
+      id: this.id.value,
+      x: this.playerX,
+      y: this.playerY,
+      body: this.body,
+    };
   }
 
   static create(props: Optional<PlayerProps, "lastMovement" | "body">, id?: UniqueEntityId) {

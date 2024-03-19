@@ -1,8 +1,10 @@
 "use client";
-import { Fruit, Game, Player, Screen } from "@snake/core";
-import { MovePlayerUseCasse } from "@snake/core/use-cases";
+import { Fruit, Game, GameProps, Player, Screen } from "@snake/core";
 import { UniqueEntityId } from "@snake/core/common";
-import { createContext, useCallback, useState } from "react";
+import { MovePlayerUseCasse } from "@snake/core/use-cases";
+import { createContext, useCallback, useEffect, useRef, useState } from "react";
+
+import { Socket, io } from "socket.io-client";
 
 interface GameContextProps {
   game: Game;
@@ -16,40 +18,67 @@ interface GameContextProps {
 
 export const GameContext = createContext({} as GameContextProps);
 
-const fruit = Fruit.create({ fruitX: 5, fruitY: 29 });
-const fruit2 = Fruit.create({ fruitX: 3, fruitY: 16 });
-const fruit3 = Fruit.create({ fruitX: 9, fruitY: 23 });
-const fruit4 = Fruit.create({ fruitX: 3, fruitY: 21 });
-const player = Player.create({ x: 0, y: 0 }, new UniqueEntityId("player-1"));
-const player2 = Player.create(
-  { x: 13, y: 27, body: [{ x: 13, y: 26 }] },
-  new UniqueEntityId("player-2"),
-);
-
 const SCALE = 20;
 const ROWS = 60;
 const COLS = 60;
 
 export function GameContextProvider({ children }: { children: React.ReactNode }) {
+  const ioRef = useRef<Socket>();
   const [game, setGame] = useState(
     Game.create({
-      fruits: {
-        [fruit.id.value]: fruit,
-        [fruit2.id.value]: fruit2,
-        [fruit3.id.value]: fruit3,
-        [fruit4.id.value]: fruit4,
-      },
-      players: { [player.id.value]: player, [player2.id.value]: player2 },
+      fruits: {},
+      players: {},
       screen: Screen.createScreen({ height: 30, width: 30 }),
     }),
   );
+
+  useEffect(() => {
+    ioRef.current = io("http://localhost:3333");
+    ioRef.current.on("connect", () => {
+      ioRef.current?.emit("bootstrap");
+    });
+
+    ioRef.current.on("setup", (setup) => {
+      const setupGame: GameProps = {
+        fruits: {},
+        players: {},
+        screen: Screen.createScreen({ height: setup.screen.height, width: setup.screen.width }),
+      };
+
+      setup.players.forEach((player) => {
+        const instance = Player.create(
+          {
+            x: player.x,
+            y: player.y,
+            body: player.body,
+          },
+          new UniqueEntityId(player.id),
+        );
+        setupGame.players[instance.id.value] = instance;
+      });
+
+      setup.fruits.forEach((fruit) => {
+        const instance = Fruit.create(
+          {
+            fruitX: fruit.fruitX,
+            fruitY: fruit.fruitY,
+          },
+          new UniqueEntityId(fruit.id),
+        );
+        setupGame.fruits[instance.id.value] = instance;
+      });
+
+      const game = Game.create(setupGame);
+      setGame(game);
+    });
+  }, []);
 
   const movePlayer = useCallback(
     (command: string) => {
       const newGame = new MovePlayerUseCasse().execute({
         game,
         command,
-        playerId: player.id, // TODO: tem ue ser dinamicamente
+        playerId: new UniqueEntityId("player.id"), // TODO: tem ue ser dinamicamente
       });
       if (newGame.isLeft()) throw new Error("errr");
       setGame(newGame.value.game);

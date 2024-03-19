@@ -27,6 +27,7 @@
     "@nestjs/websockets": "^10.3.3",
     "@snake/core": "workspace:*",
     "@snake/eslint-config": "workspace:*",
+    "@snake/typescript-config": "workspace:*",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },

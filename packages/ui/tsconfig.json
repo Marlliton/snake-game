@@ -2,6 +2,8 @@
   "extends": "@snake/typescript-config/react-library.json",
   "compilerOptions": {
     "outDir": "dist",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "paths": {
       "@/*": ["./src/*"]
     }

@@ -103,6 +103,16 @@ export class Game extends Entity<Game, GameProps> {
     return finalGameState;
   }
 
+  gameState() {
+    const fruits = Object.entries(this.fruits).map(([_, fruit]) => fruit.state());
+    const players = Object.entries(this.players).map(([_, player]) => player.state());
+    return {
+      fruits,
+      players,
+      screen: this.screen.state(),
+    };
+  }
+
   private applyMovementEffects(playerMoved: Player): Game {
     const isFruitCollided = Object.entries(this.fruits).find(([_, fruit]) =>
       fruit.checkCollision(playerMoved.playerX, playerMoved.playerY),
