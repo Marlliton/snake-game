@@ -1,9 +1,11 @@
 import { Module } from "@nestjs/common";
 
-import { TesteGateway } from "./bootstrap/bootstrap.gateway";
+import { AddPlayerUseCasseNest } from "../use-cases/add-player-nest";
+import { RemovePlayerUseCasseNest } from "../use-cases/remove-player-nest";
+import { BootstrapGateway } from "./bootstrap/bootstrap.gateway";
 
 @Module({
-  providers: [TesteGateway],
-  exports: [TesteGateway],
+  providers: [BootstrapGateway, AddPlayerUseCasseNest, RemovePlayerUseCasseNest],
+  exports: [BootstrapGateway],
 })
 export class GatewayModule {}

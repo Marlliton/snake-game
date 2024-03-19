@@ -8,7 +8,7 @@ import { use, useCallback, useEffect, useRef } from "react";
 export function Canvas() {
   const { registerObserver } = use(KeyboardContext);
   const { theme } = use(ThemeContext);
-  const { players, cols, rows, scale, movePlayer, fruits } = use(GameContext);
+  const { player, cols, rows, scale, movePlayer, fruits, players } = use(GameContext);
   const fruitsList = fruits();
   const playersList = players();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -34,20 +34,22 @@ export function Canvas() {
   );
   const renderPlayers = useCallback(
     (ctx: CanvasRenderingContext2D) => {
-      playersList.forEach((player) => {
-        const { playerX, playerY, body } = player;
+      if (!player) return;
 
-        ctx.fillStyle = player.id.value === "player-1" ? theme["300"] : theme["350"];
+      playersList.forEach((p) => {
+        const { playerX, playerY, body } = p;
+
+        ctx.fillStyle = p.id.equals(player.id) ? theme["300"] : theme["350"];
         ctx.fillRect(playerX * scale, playerY * scale, scale, scale);
 
         for (let i = 0; i < body.length; i++) {
-          ctx.fillStyle = player.id.value === "player-1" ? theme["400"] : theme["450"];
+          ctx.fillStyle = p.id.equals(player.id) ? theme["400"] : theme["450"];
           if (!body.length) return;
           ctx.fillRect(body[i]!.x * scale, body[i]!.y * scale, scale, scale);
         }
       });
     },
-    [theme, playersList, scale],
+    [player, playersList, theme, scale],
   );
 
   const renderFruits = useCallback(

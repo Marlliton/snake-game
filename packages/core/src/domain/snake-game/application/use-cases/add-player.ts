@@ -1,23 +1,28 @@
+import { UniqueEntityId } from "@/common";
 import { Either, right } from "@/common/error/either";
 
 import { Game } from "../../enterprise/entities/game";
-import { Player } from "../../enterprise/entities/player";
+import { Player, PlayerProps } from "../../enterprise/entities/player";
 
 interface AddPlayerUseCasseRequest {
-  player?: Player;
+  player?: Partial<PlayerProps>;
+  playerId?: string;
   game: Game;
 }
 
 type AddPlayerUseCasseResponse = Either<null, { game: Game }>;
 
 export class AddPlayerUseCasse {
-  execute({ game, player: p }: AddPlayerUseCasseRequest): AddPlayerUseCasseResponse {
-    if (!p) {
-      const player = Player.create({ x: 0, y: 0 });
+  execute({ game, player, playerId }: AddPlayerUseCasseRequest): AddPlayerUseCasseResponse {
+    const playerCreated = Player.create(
+      {
+        x: Math.floor(Math.random() * 30),
+        y: Math.floor(Math.random() * 30),
+        ...player,
+      },
+      new UniqueEntityId(playerId),
+    );
 
-      return right({ game: game.addPlayer(player) });
-    }
-
-    return right({ game: game.addPlayer(p) });
+    return right({ game: game.addPlayer(playerCreated) });
   }
 }

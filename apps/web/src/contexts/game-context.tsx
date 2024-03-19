@@ -11,6 +11,7 @@ interface GameContextProps {
   scale: number;
   rows: number;
   cols: number;
+  player: Player | null;
   movePlayer(command: string): void;
   fruits(): Fruit[];
   players(): Player[];
@@ -24,6 +25,7 @@ const COLS = 60;
 
 export function GameContextProvider({ children }: { children: React.ReactNode }) {
   const ioRef = useRef<Socket>();
+  const [player, setPlayer] = useState<Player | null>(null);
   const [game, setGame] = useState(
     Game.create({
       fruits: {},
@@ -33,57 +35,66 @@ export function GameContextProvider({ children }: { children: React.ReactNode })
   );
 
   useEffect(() => {
-    ioRef.current = io("http://localhost:3333");
+    if (!ioRef.current) {
+      ioRef.current = io("http://localhost:3333");
+    }
+
     ioRef.current.on("connect", () => {
-      ioRef.current?.emit("bootstrap");
+      ioRef.current?.on("bootstrap", ({ setup, playerId }) => {
+        const setupGame: GameProps = {
+          fruits: {},
+          players: {},
+          screen: Screen.createScreen({ height: setup.screen.height, width: setup.screen.width }),
+        };
+
+        setup.players.forEach((player) => {
+          const instance = Player.create(
+            {
+              x: player.x,
+              y: player.y,
+              body: player.body,
+            },
+            new UniqueEntityId(player.id),
+          );
+          setupGame.players[instance.id.value] = instance;
+        });
+
+        setup.fruits.forEach((fruit) => {
+          const instance = Fruit.create(
+            {
+              fruitX: fruit.fruitX,
+              fruitY: fruit.fruitY,
+            },
+            new UniqueEntityId(fruit.id),
+          );
+          setupGame.fruits[instance.id.value] = instance;
+        });
+
+        const game = Game.create(setupGame);
+        const player = game.player(new UniqueEntityId(playerId));
+
+        setPlayer(player!);
+        setGame(game);
+      });
     });
 
-    ioRef.current.on("setup", (setup) => {
-      const setupGame: GameProps = {
-        fruits: {},
-        players: {},
-        screen: Screen.createScreen({ height: setup.screen.height, width: setup.screen.width }),
-      };
+    // ioRef.current.on("setup", (setup) => {
 
-      setup.players.forEach((player) => {
-        const instance = Player.create(
-          {
-            x: player.x,
-            y: player.y,
-            body: player.body,
-          },
-          new UniqueEntityId(player.id),
-        );
-        setupGame.players[instance.id.value] = instance;
-      });
-
-      setup.fruits.forEach((fruit) => {
-        const instance = Fruit.create(
-          {
-            fruitX: fruit.fruitX,
-            fruitY: fruit.fruitY,
-          },
-          new UniqueEntityId(fruit.id),
-        );
-        setupGame.fruits[instance.id.value] = instance;
-      });
-
-      const game = Game.create(setupGame);
-      setGame(game);
-    });
+    // });
   }, []);
 
   const movePlayer = useCallback(
     (command: string) => {
+      if (!player) return;
       const newGame = new MovePlayerUseCasse().execute({
         game,
         command,
-        playerId: new UniqueEntityId("player.id"), // TODO: tem ue ser dinamicamente
+        playerId: player.id, // TODO: tem ue ser dinamicamente
       });
       if (newGame.isLeft()) throw new Error("errr");
       setGame(newGame.value.game);
     },
-    [game],
+    [game, player],
   );
 
   const fruits = useCallback(() => {
@@ -100,6 +111,7 @@ export function GameContextProvider({ children }: { children: React.ReactNode })
     <GameContext.Provider
       value={{
         game,
+        player,
         cols: COLS,
         rows: ROWS,
         scale: SCALE,

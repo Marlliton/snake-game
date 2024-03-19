@@ -13,7 +13,7 @@ type AcceptedMoves = {
   [key: string]: () => Player;
 };
 
-interface PlayerProps {
+export interface PlayerProps {
   x: number;
   y: number;
   lastMovement: "up" | "right" | "down" | "left" | null;
