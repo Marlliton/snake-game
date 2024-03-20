@@ -2,7 +2,7 @@ import { Entity } from "@/common/entities/entity";
 import { UniqueEntityId } from "@/common/entities/unique-entity-id";
 
 import { Fruit } from "../fruit";
-import { Player } from "../player";
+import { Body, Player } from "../player";
 import { Coordinates } from "../value-objects/Coordinates";
 import { Screen } from "../value-objects/Screen";
 import { CollisionDetection } from "./CollisionDetection";
@@ -13,7 +13,26 @@ export interface GameProps {
   screen: Screen;
 }
 
+export type GameState = {
+  fruits: {
+    fruitY: number;
+    fruitX: number;
+    id: string;
+  }[];
+  players: {
+    id: string;
+    x: number;
+    y: number;
+    body: Body[];
+  }[];
+  screen: {
+    width: number;
+    height: number;
+  };
+};
+
 export class Game extends Entity<Game, GameProps> {
+  private static observers: any[] = []; // TODO: REFATORA OS OBSERVADORES PARA UMA CLASSE OU DEIXAR MAIS ORGANIZADO.
   get players() {
     return this.props.players;
   }
@@ -100,10 +119,12 @@ export class Game extends Entity<Game, GameProps> {
     const playerMoved = playerToMove.movePlayer(command, this.screen);
 
     const finalGameState = this.applyMovementEffects(playerMoved);
+
+    this.notifyAll();
     return finalGameState;
   }
 
-  gameState() {
+  state(): GameState {
     const fruits = Object.entries(this.fruits).map(([_, fruit]) => fruit.state());
     const players = Object.entries(this.players).map(([_, player]) => player.state());
     return {
@@ -111,6 +132,53 @@ export class Game extends Entity<Game, GameProps> {
       players,
       screen: this.screen.state(),
     };
+  }
+
+  updateState(state: GameState): Game {
+    const players = state.players.reduce(
+      (players, currentPlayer) => {
+        const instance = Player.create(
+          {
+            x: currentPlayer.x,
+            y: currentPlayer.y,
+            body: currentPlayer.body,
+          },
+          new UniqueEntityId(currentPlayer.id),
+        );
+
+        players[currentPlayer.id] = instance;
+        return players;
+      },
+      {} as Record<string, Player>,
+    );
+
+    const fruits = state.fruits.reduce(
+      (fruits, currentFruit) => {
+        const instance = Fruit.create(
+          {
+            fruitX: currentFruit.fruitX,
+            fruitY: currentFruit.fruitY,
+          },
+          new UniqueEntityId(currentFruit.id),
+        );
+
+        fruits[currentFruit.id] = instance;
+        return fruits;
+      },
+      {} as Record<string, Fruit>,
+    );
+
+    return this.clone({ fruits, players, screen: Screen.createScreen(state.screen) });
+  }
+
+  onMove(callback: () => void) {
+    Game.observers.push(callback);
+  }
+
+  private notifyAll() {
+    Game.observers.forEach((callback) => {
+      callback();
+    });
   }
 
   private applyMovementEffects(playerMoved: Player): Game {

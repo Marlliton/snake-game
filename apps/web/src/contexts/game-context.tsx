@@ -2,16 +2,17 @@
 import { Fruit, Game, GameProps, Player, Screen } from "@snake/core";
 import { UniqueEntityId } from "@snake/core/common";
 import { MovePlayerUseCasse } from "@snake/core/use-cases";
-import { createContext, useCallback, useEffect, useRef, useState } from "react";
+import { createContext, use, useCallback, useEffect, useRef, useState } from "react";
 
 import { Socket, io } from "socket.io-client";
+import { KeyboardContext } from "./keyboard-context";
 
 interface GameContextProps {
   game: Game;
   scale: number;
   rows: number;
   cols: number;
-  player: Player | null;
+  playerId: string | null;
   movePlayer(command: string): void;
   fruits(): Fruit[];
   players(): Player[];
@@ -24,8 +25,9 @@ const ROWS = 60;
 const COLS = 60;
 
 export function GameContextProvider({ children }: { children: React.ReactNode }) {
+  const { registerObserver } = use(KeyboardContext);
   const ioRef = useRef<Socket>();
-  const [player, setPlayer] = useState<Player | null>(null);
+  const [playerId, setPlayerId] = useState<string | null>(null);
   const [game, setGame] = useState(
     Game.create({
       fruits: {},
@@ -34,6 +36,34 @@ export function GameContextProvider({ children }: { children: React.ReactNode })
     }),
   );
 
+  const movePlayer = useCallback(
+    (command: string) => {
+      if (!playerId) return;
+      const result = new MovePlayerUseCasse().execute({
+        game,
+        command,
+        playerId: new UniqueEntityId(playerId),
+      });
+      if (result.isLeft()) throw result.value;
+
+      setGame(result.value.game);
+    },
+    [game, playerId],
+  );
+
+  useEffect(() => {
+    registerObserver({
+      action: movePlayer,
+      identifier: "move",
+    });
+    registerObserver({
+      action: (command: string) => {
+        ioRef.current?.emit("new-movement", { command });
+      },
+      identifier: "emiter",
+    });
+  }, [movePlayer, registerObserver]);
+
   useEffect(() => {
     if (!ioRef.current) {
       ioRef.current = io("http://localhost:3333");
@@ -41,61 +71,35 @@ export function GameContextProvider({ children }: { children: React.ReactNode })
 
     ioRef.current.on("connect", () => {
       ioRef.current?.on("bootstrap", ({ setup, playerId }) => {
-        const setupGame: GameProps = {
-          fruits: {},
-          players: {},
-          screen: Screen.createScreen({ height: setup.screen.height, width: setup.screen.width }),
-        };
+        const createdSetup = game.updateState(setup);
 
-        setup.players.forEach((player) => {
-          const instance = Player.create(
-            {
-              x: player.x,
-              y: player.y,
-              body: player.body,
-            },
-            new UniqueEntityId(player.id),
-          );
-          setupGame.players[instance.id.value] = instance;
-        });
-
-        setup.fruits.forEach((fruit) => {
-          const instance = Fruit.create(
-            {
-              fruitX: fruit.fruitX,
-              fruitY: fruit.fruitY,
-            },
-            new UniqueEntityId(fruit.id),
-          );
-          setupGame.fruits[instance.id.value] = instance;
-        });
-
-        const game = Game.create(setupGame);
-        const player = game.player(new UniqueEntityId(playerId));
-
-        setPlayer(player!);
-        setGame(game);
+        setPlayerId(playerId);
+        setGame(createdSetup);
       });
     });
 
-    // ioRef.current.on("setup", (setup) => {
+    ioRef.current.on("setup", ({ setup }) => {
+      const newSetup = game.updateState(setup);
 
-    // });
-  }, []);
+      setGame(newSetup);
+    });
 
-  const movePlayer = useCallback(
-    (command: string) => {
-      if (!player) return;
-      const newGame = new MovePlayerUseCasse().execute({
-        game,
-        command,
-        playerId: player.id, // TODO: tem ue ser dinamicamente
-      });
-      if (newGame.isLeft()) throw new Error("errr");
-      setGame(newGame.value.game);
-    },
-    [game, player],
-  );
+    ioRef.current.on("apply-movement-effects", ({ state }) => {
+      if (!playerId) return;
+      const mainPlayer = game.player(new UniqueEntityId(playerId));
+      const newGameState = game.updateState(state);
+
+      setGame(
+        newGameState.clone({
+          players: { ...newGameState.players, [mainPlayer!.id.value]: mainPlayer! },
+        }),
+      );
+    });
+
+    ioRef.current.on("player-disconnect", ({ state }) => {
+      setGame(game.updateState(state));
+    });
+  }, [game, playerId]);
 
   const fruits = useCallback(() => {
     const fruits = Object.entries(game.fruits).map(([_, fruit]) => fruit);
@@ -111,7 +115,7 @@ export function GameContextProvider({ children }: { children: React.ReactNode })
     <GameContext.Provider
       value={{
         game,
-        player,
+        playerId,
         cols: COLS,
         rows: ROWS,
         scale: SCALE,
