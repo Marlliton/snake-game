@@ -10,7 +10,9 @@ export function Canvas() {
   const fruitsList = fruits();
   const playersList = players();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [animationFrameId, setAnimationFrameId] = useState<number | null>(null);
+  const animationRef = useRef<number>();
+
+  // playersList.map((p, i) => console.log(`${p.id.value} +  ${i}`, p.headCoordinates));
 
   const renderBoard = useCallback(
     (ctx: CanvasRenderingContext2D) => {
@@ -27,7 +29,7 @@ export function Canvas() {
   const renderPlayers = useCallback(
     (ctx: CanvasRenderingContext2D) => {
       if (!playerId) return;
-      console.log("renderizando player inicio");
+      // console.log("renderizando player inicio");
       playersList.forEach((p) => {
         const { playerX, playerY, body } = p;
 
@@ -64,7 +66,9 @@ export function Canvas() {
         renderFruits(ctx);
         renderPlayers(ctx);
 
-        setAnimationFrameId(requestAnimationFrame(() => renderGame(canvas)));
+        animationRef.current = requestAnimationFrame(() => {
+          renderGame(canvas);
+        });
       }
     },
     [renderBoard, renderFruits, renderPlayers],
@@ -72,12 +76,15 @@ export function Canvas() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    renderGame(canvas);
+
+    animationRef.current = requestAnimationFrame(() => {
+      renderGame(canvas);
+    });
 
     return () => {
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [animationFrameId, renderGame]);
+  }, [renderGame]);
 
   return (
     <Container>

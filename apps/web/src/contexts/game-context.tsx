@@ -1,5 +1,5 @@
 "use client";
-import { Fruit, Game, GameProps, Player, Screen } from "@snake/core";
+import { Fruit, Game, Player, Screen } from "@snake/core";
 import { UniqueEntityId } from "@snake/core/common";
 import { MovePlayerUseCasse } from "@snake/core/use-cases";
 import { createContext, use, useCallback, useEffect, useRef, useState } from "react";
@@ -52,10 +52,10 @@ export function GameContextProvider({ children }: { children: React.ReactNode })
   );
 
   useEffect(() => {
-    registerObserver({
-      action: movePlayer,
-      identifier: "move",
-    });
+    // registerObserver({
+    //   action: movePlayer,
+    //   identifier: "move",
+    // });
     registerObserver({
       action: (command: string) => {
         ioRef.current?.emit("new-movement", { command });
@@ -79,21 +79,9 @@ export function GameContextProvider({ children }: { children: React.ReactNode })
     });
 
     ioRef.current.on("setup", ({ setup }) => {
-      const newSetup = game.updateState(setup);
+      const gameState = game.updateState(setup);
 
-      setGame(newSetup);
-    });
-
-    ioRef.current.on("apply-movement-effects", ({ state }) => {
-      if (!playerId) return;
-      const mainPlayer = game.player(new UniqueEntityId(playerId));
-      const newGameState = game.updateState(state);
-
-      setGame(
-        newGameState.clone({
-          players: { ...newGameState.players, [mainPlayer!.id.value]: mainPlayer! },
-        }),
-      );
+      setGame(gameState);
     });
 
     ioRef.current.on("player-disconnect", ({ state }) => {
