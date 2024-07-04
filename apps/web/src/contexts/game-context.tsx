@@ -36,6 +36,7 @@ export function GameContextProvider({ children }: { children: React.ReactNode })
     }),
   );
 
+  // mensagem para commit só para testar lazygit
   const movePlayer = useCallback(
     (command: string) => {
       if (!playerId) return;
